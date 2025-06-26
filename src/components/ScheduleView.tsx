@@ -1,59 +1,63 @@
 
-import { useState } from 'react';
+import React, { useState } from 'react';
 import { Card, CardContent, CardHeader, CardTitle } from "@/components/ui/card";
 import { Button } from "@/components/ui/button";
 import { Badge } from "@/components/ui/badge";
-import { Calendar, Clock, MapPin, User } from "lucide-react";
+import { Calendar, ChevronLeft, ChevronRight, Plus, Clock, MapPin, User } from "lucide-react";
 
-interface ScheduleItem {
+interface ScheduleEvent {
   id: string;
   title: string;
   customer: string;
+  address: string;
   time: string;
   duration: string;
-  location: string;
   status: 'scheduled' | 'in-progress' | 'completed';
-  technician: string;
+  assignedTo: string;
+  type: 'job' | 'appointment' | 'meeting';
 }
 
-const mockScheduleItems: ScheduleItem[] = [
-  {
-    id: '1',
-    title: 'Kitchen Renovation - Site Visit',
-    customer: 'John Smith',
-    time: '09:00',
-    duration: '2h',
-    location: '123 Main St, Anytown',
-    status: 'scheduled',
-    technician: 'Mike Johnson'
-  },
-  {
-    id: '2',
-    title: 'Bathroom Repair',
-    customer: 'ABC Construction Inc.',
-    time: '11:30',
-    duration: '4h',
-    location: '456 Business Ave, City',
-    status: 'in-progress',
-    technician: 'Sarah Davis'
-  },
-  {
-    id: '3',
-    title: 'Deck Installation - Materials Delivery',
-    customer: 'Sarah Johnson',
-    time: '14:00',
-    duration: '1h',
-    location: '789 Oak Drive, Hometown',
-    status: 'scheduled',
-    technician: 'Tom Wilson'
-  }
-];
-
 export const ScheduleView = () => {
-  const [scheduleItems] = useState<ScheduleItem[]>(mockScheduleItems);
-  const [selectedDate, setSelectedDate] = useState(new Date().toISOString().split('T')[0]);
+  const [currentDate, setCurrentDate] = useState(new Date());
+  const [view, setView] = useState<'day' | 'week' | 'month'>('week');
 
-  const getStatusColor = (status: string) => {
+  const events: ScheduleEvent[] = [
+    {
+      id: '1',
+      title: 'Kitchen Renovation',
+      customer: 'John Smith',
+      address: '123 Main St',
+      time: '09:00',
+      duration: '4 hours',
+      status: 'scheduled',
+      assignedTo: 'Mike Johnson',
+      type: 'job'
+    },
+    {
+      id: '2',
+      title: 'Consultation',
+      customer: 'ABC Construction',
+      address: '456 Business Ave',
+      time: '14:00',
+      duration: '1 hour',
+      status: 'scheduled',
+      assignedTo: 'Sarah Wilson',
+      type: 'appointment'
+    },
+    {
+      id: '3',
+      title: 'Team Meeting',
+      customer: 'Internal',
+      address: 'Office',
+      time: '16:00',
+      duration: '30 minutes',
+      status: 'scheduled',
+      assignedTo: 'All Team',
+      type: 'meeting'
+    }
+  ];
+
+  const getStatusColor = (status: ScheduleEvent['status']) => {
     switch (status) {
       case 'scheduled': return 'bg-blue-100 text-blue-800';
       case 'in-progress': return 'bg-yellow-100 text-yellow-800';
@@ -62,132 +66,142 @@ export const ScheduleView = () => {
     }
   };
 
+  const getTypeColor = (type: ScheduleEvent['type']) => {
+    switch (type) {
+      case 'job': return 'bg-purple-100 text-purple-800';
+      case 'appointment': return 'bg-orange-100 text-orange-800';
+      case 'meeting': return 'bg-cyan-100 text-cyan-800';
+      default: return 'bg-gray-100 text-gray-800';
+    }
+  };
+
+  const navigateDate = (direction: 'prev' | 'next') => {
+    const newDate = new Date(currentDate);
+    if (view === 'day') {
+      newDate.setDate(newDate.getDate() + (direction === 'next' ? 1 : -1));
+    } else if (view === 'week') {
+      newDate.setDate(newDate.getDate() + (direction === 'next' ? 7 : -7));
+    } else {
+      newDate.setMonth(newDate.getMonth() + (direction === 'next' ? 1 : -1));
+    }
+    setCurrentDate(newDate);
+  };
+
+  const formatDateRange = () => {
+    const today = new Date(currentDate);
+    if (view === 'day') {
+      return today.toLocaleDateString('en-US', { 
+        weekday: 'long', 
+        year: 'numeric', 
+        month: 'long', 
+        day: 'numeric' 
+      });
+    } else if (view === 'week') {
+      const startOfWeek = new Date(today);
+      startOfWeek.setDate(today.getDate() - today.getDay());
+      const endOfWeek = new Date(startOfWeek);
+      endOfWeek.setDate(startOfWeek.getDate() + 6);
+      
+      return `${startOfWeek.toLocaleDateString('en-US', { month: 'short', day: 'numeric' })} - ${endOfWeek.toLocaleDateString('en-US', { month: 'short', day: 'numeric', year: 'numeric' })}`;
+    } else {
+      return today.toLocaleDateString('en-US', { year: 'numeric', month: 'long' });
+    }
+  };
+
   return (
     <div className="space-y-6">
       <div className="flex justify-between items-center">
-        <h2 className="text-2xl font-bold">Schedule</h2>
-        <div className="flex items-center gap-4">
-          <input
-            type="date"
-            value={selectedDate}
-            onChange={(e) => setSelectedDate(e.target.value)}
-            className="px-3 py-2 border rounded-md"
-          />
-          <Button>Add Appointment</Button>
+        <div>
+          <h1 className="text-3xl font-bold">Schedule</h1>
+          <p className="text-muted-foreground">Manage appointments and job scheduling</p>
         </div>
+        <Button className="flex items-center gap-2">
+          <Plus className="h-4 w-4" />
+          New Event
+        </Button>
       </div>
 
-      <div className="grid grid-cols-1 lg:grid-cols-3 gap-6">
-        {/* Today's Schedule */}
-        <div className="lg:col-span-2">
-          <Card>
-            <CardHeader>
-              <CardTitle className="flex items-center gap-2">
-                <Calendar className="h-5 w-5" />
-                Today's Schedule - {new Date(selectedDate).toLocaleDateString()}
-              </CardTitle>
-            </CardHeader>
-            <CardContent>
-              <div className="space-y-4">
-                {scheduleItems.map((item) => (
-                  <div key={item.id} className="border rounded-lg p-4 hover:shadow-md transition-shadow">
-                    <div className="flex justify-between items-start mb-2">
-                      <h3 className="font-semibold text-lg">{item.title}</h3>
-                      <Badge className={getStatusColor(item.status)}>
-                        {item.status.replace('-', ' ')}
-                      </Badge>
+      <Card>
+        <CardHeader>
+          <div className="flex justify-between items-center">
+            <div className="flex items-center gap-4">
+              <Button variant="outline" size="sm" onClick={() => navigateDate('prev')}>
+                <ChevronLeft className="h-4 w-4" />
+              </Button>
+              <h2 className="text-lg font-semibold">{formatDateRange()}</h2>
+              <Button variant="outline" size="sm" onClick={() => navigateDate('next')}>
+                <ChevronRight className="h-4 w-4" />
+              </Button>
+            </div>
+            
+            <div className="flex gap-2">
+              {(['day', 'week', 'month'] as const).map(viewType => (
+                <Button
+                  key={viewType}
+                  variant={view === viewType ? 'default' : 'outline'}
+                  size="sm"
+                  onClick={() => setView(viewType)}
+                >
+                  {viewType.charAt(0).toUpperCase() + viewType.slice(1)}
+                </Button>
+              ))}
+            </div>
+          </div>
+        </CardHeader>
+        <CardContent>
+          <div className="space-y-4">
+            {events.map((event) => (
+              <Card key={event.id} className="border-l-4 border-l-blue-500">
+                <CardContent className="p-4">
+                  <div className="flex justify-between items-start">
+                    <div className="flex-1">
+                      <div className="flex items-center gap-3 mb-2">
+                        <h3 className="font-semibold">{event.title}</h3>
+                        <Badge className={getStatusColor(event.status)}>
+                          {event.status.replace('-', ' ')}
+                        </Badge>
+                        <Badge className={getTypeColor(event.type)}>
+                          {event.type}
+                        </Badge>
+                      </div>
+                      
+                      <div className="grid md:grid-cols-2 gap-2 text-sm text-muted-foreground">
+                        <div className="flex items-center gap-2">
+                          <Clock className="h-4 w-4" />
+                          {event.time} ({event.duration})
+                        </div>
+                        <div className="flex items-center gap-2">
+                          <User className="h-4 w-4" />
+                          {event.assignedTo}
+                        </div>
+                        <div className="flex items-center gap-2">
+                          <User className="h-4 w-4" />
+                          {event.customer}
+                        </div>
+                        <div className="flex items-center gap-2">
+                          <MapPin className="h-4 w-4" />
+                          {event.address}
+                        </div>
+                      </div>
                     </div>
                     
-                    <div className="grid grid-cols-1 md:grid-cols-2 gap-2 text-sm text-muted-foreground">
-                      <div className="flex items-center gap-1">
-                        <User className="h-3 w-3" />
-                        {item.customer}
-                      </div>
-                      <div className="flex items-center gap-1">
-                        <Clock className="h-3 w-3" />
-                        {item.time} ({item.duration})
-                      </div>
-                      <div className="flex items-center gap-1">
-                        <MapPin className="h-3 w-3" />
-                        {item.location}
-                      </div>
-                      <div className="flex items-center gap-1">
-                        <User className="h-3 w-3" />
-                        Technician: {item.technician}
-                      </div>
-                    </div>
-
-                    <div className="flex gap-2 mt-3">
-                      <Button variant="outline" size="sm">Edit</Button>
-                      <Button variant="outline" size="sm">View Details</Button>
-                      {item.status === 'scheduled' && (
-                        <Button variant="default" size="sm">Start Job</Button>
+                    <div className="flex gap-2">
+                      <Button variant="outline" size="sm">
+                        Edit
+                      </Button>
+                      {event.status === 'scheduled' && (
+                        <Button size="sm">
+                          Start
+                        </Button>
                       )}
                     </div>
                   </div>
-                ))}
-              </div>
-            </CardContent>
-          </Card>
-        </div>
-
-        {/* Schedule Summary */}
-        <div>
-          <Card>
-            <CardHeader>
-              <CardTitle>Today's Summary</CardTitle>
-            </CardHeader>
-            <CardContent>
-              <div className="space-y-4">
-                <div className="flex justify-between items-center">
-                  <span className="text-sm text-muted-foreground">Total Jobs</span>
-                  <span className="font-semibold">{scheduleItems.length}</span>
-                </div>
-                <div className="flex justify-between items-center">
-                  <span className="text-sm text-muted-foreground">Scheduled</span>
-                  <span className="font-semibold text-blue-600">
-                    {scheduleItems.filter(item => item.status === 'scheduled').length}
-                  </span>
-                </div>
-                <div className="flex justify-between items-center">
-                  <span className="text-sm text-muted-foreground">In Progress</span>
-                  <span className="font-semibold text-yellow-600">
-                    {scheduleItems.filter(item => item.status === 'in-progress').length}
-                  </span>
-                </div>
-                <div className="flex justify-between items-center">
-                  <span className="text-sm text-muted-foreground">Completed</span>
-                  <span className="font-semibold text-green-600">
-                    {scheduleItems.filter(item => item.status === 'completed').length}
-                  </span>
-                </div>
-              </div>
-            </CardContent>
-          </Card>
-
-          <Card className="mt-6">
-            <CardHeader>
-              <CardTitle>Technicians</CardTitle>
-            </CardHeader>
-            <CardContent>
-              <div className="space-y-3">
-                <div className="flex justify-between items-center">
-                  <span>Mike Johnson</span>
-                  <Badge variant="outline">Available</Badge>
-                </div>
-                <div className="flex justify-between items-center">
-                  <span>Sarah Davis</span>
-                  <Badge className="bg-yellow-100 text-yellow-800">Busy</Badge>
-                </div>
-                <div className="flex justify-between items-center">
-                  <span>Tom Wilson</span>
-                  <Badge variant="outline">Available</Badge>
-                </div>
-              </div>
-            </CardContent>
-          </Card>
-        </div>
-      </div>
+                </CardContent>
+              </Card>
+            ))}
+          </div>
+        </CardContent>
+      </Card>
     </div>
   );
 };
