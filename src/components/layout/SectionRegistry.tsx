@@ -41,6 +41,30 @@ const MapView = lazy(() => import('../MapView').then(m => ({ default: m.MapView 
 const BackOfficeSettings = lazy(() => import('../BackOfficeSettings').then(m => ({ default: m.BackOfficeSettings })));
 const InternalMeetings = lazy(() => import('../InternalMeetings').then(m => ({ default: m.InternalMeetings })));
 
+// Sample job data for MapView
+const sampleJobs = [
+  {
+    id: '1',
+    title: 'Kitchen Renovation',
+    customer: 'John Smith',
+    address: '123 Main St, Anytown, USA',
+    coordinates: [-74.006, 40.7128] as [number, number],
+    status: 'scheduled' as const,
+    type: 'job' as const,
+    time: 'Today 2:00 PM'
+  },
+  {
+    id: '2',
+    title: 'Bathroom Repair',
+    customer: 'ABC Construction',
+    address: '456 Business Ave, City, USA',
+    coordinates: [-74.0, 40.72] as [number, number],
+    status: 'in-progress' as const,
+    type: 'job' as const,
+    time: 'Tomorrow 9:00 AM'
+  }
+];
+
 export const createSectionRegistry = () => {
   return {
     home: <MainDashboard onSectionChange={(section) => {
@@ -48,9 +72,15 @@ export const createSectionRegistry = () => {
       window.dispatchEvent(event);
     }} />,
     customers: <CustomerList />,
-    'customer-form': <CustomerForm />,
+    'customer-form': <CustomerForm onClose={() => {
+      const event = new CustomEvent('sectionChange', { detail: 'customers' });
+      window.dispatchEvent(event);
+    }} />,
     jobs: <JobList />,
-    'job-form': <JobForm />,
+    'job-form': <JobForm onClose={() => {
+      const event = new CustomEvent('sectionChange', { detail: 'jobs' });
+      window.dispatchEvent(event);
+    }} />,
     schedule: <ScheduleView />,
     'time-tracking': <TimeTracking />,
     estimates: <EstimateList />,
@@ -81,7 +111,7 @@ export const createSectionRegistry = () => {
     'profit-analysis': <ProfitMarginAnalysis />,
     'team-chat': <EmployeeChat />,
     notifications: <NotificationCenter />,
-    'map-view': <MapView />,
+    'map-view': <MapView jobs={sampleJobs} />,
     'back-office': <BackOfficeSettings />,
     'internal-meetings': <InternalMeetings />,
     profile: <div className="p-6"><h1 className="text-2xl font-bold">Profile Settings</h1><p className="text-muted-foreground mt-2">Manage your profile and account settings.</p></div>,
