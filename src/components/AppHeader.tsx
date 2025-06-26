@@ -13,7 +13,8 @@ import {
   Zap,
   ShieldCheck,
   Menu,
-  Calendar
+  Calendar,
+  Cog
 } from "lucide-react";
 import {
   DropdownMenu,
@@ -39,7 +40,7 @@ export const AppHeader = ({ onSectionChange, onMobileSidebarToggle, isMobile = f
     // Clear session storage and redirect to landing page
     sessionStorage.removeItem('userType');
     sessionStorage.removeItem('devUserType');
-    navigate('/');
+    navigate('/landing');
   };
 
   const handleSearch = (e: React.FormEvent) => {
@@ -71,11 +72,11 @@ export const AppHeader = ({ onSectionChange, onMobileSidebarToggle, isMobile = f
             <h1 className={`font-bold bg-gradient-to-r from-blue-600 to-purple-600 bg-clip-text text-transparent ${
               isMobile ? 'text-lg' : 'text-xl'
             }`}>
-              JobBlox SaaS
+              JobBlox Multi-Branch
             </h1>
             <Badge variant="secondary" className="flex items-center gap-1">
               <Zap className="h-3 w-3" />
-              Multi-Tenant
+              Business Platform
             </Badge>
           </div>
           
@@ -86,7 +87,7 @@ export const AppHeader = ({ onSectionChange, onMobileSidebarToggle, isMobile = f
                 <Search className="absolute left-3 top-1/2 transform -translate-y-1/2 h-4 w-4 text-muted-foreground" />
                 <Input
                   type="search"
-                  placeholder="Search tenants, clients..."
+                  placeholder="Search jobs, customers, branches..."
                   value={searchQuery}
                   onChange={(e) => setSearchQuery(e.target.value)}
                   className="pl-9 w-64"
@@ -109,6 +110,17 @@ export const AppHeader = ({ onSectionChange, onMobileSidebarToggle, isMobile = f
             </Button>
           )}
 
+          {/* Back Office Button */}
+          <Button 
+            variant="outline" 
+            size="sm"
+            onClick={() => onSectionChange('back-office')}
+            className="flex items-center gap-2"
+          >
+            <Cog className="h-4 w-4" />
+            {!isMobile && "Back Office"}
+          </Button>
+
           {/* Internal Meetings */}
           <Button 
             variant="ghost" 
@@ -130,18 +142,6 @@ export const AppHeader = ({ onSectionChange, onMobileSidebarToggle, isMobile = f
             <Bell className="h-4 w-4" />
           </Button>
 
-          {/* Settings - Desktop Only */}
-          {!isMobile && (
-            <Button 
-              variant="ghost" 
-              size="icon"
-              onClick={() => onSectionChange('settings')}
-              className="h-8 w-8"
-            >
-              <Settings className="h-4 w-4" />
-            </Button>
-          )}
-
           {/* User Menu */}
           <DropdownMenu>
             <DropdownMenuTrigger asChild>
@@ -152,10 +152,10 @@ export const AppHeader = ({ onSectionChange, onMobileSidebarToggle, isMobile = f
                   </div>
                   {!isMobile && (
                     <div className="hidden sm:block text-left">
-                      <p className="text-sm font-medium">Demo User</p>
+                      <p className="text-sm font-medium">Business User</p>
                       <p className="text-xs text-muted-foreground flex items-center gap-1">
                         <ShieldCheck className="h-3 w-3" />
-                        {sessionStorage.getItem('userType') || sessionStorage.getItem('devUserType') || 'User'}
+                        Multi-Branch Manager
                       </p>
                     </div>
                   )}
@@ -171,9 +171,9 @@ export const AppHeader = ({ onSectionChange, onMobileSidebarToggle, isMobile = f
                 Profile Settings
               </DropdownMenuItem>
               
-              <DropdownMenuItem onClick={() => onSectionChange('settings')}>
-                <Settings className="mr-2 h-4 w-4" />
-                System Settings
+              <DropdownMenuItem onClick={() => onSectionChange('back-office')}>
+                <Cog className="mr-2 h-4 w-4" />
+                Back Office
               </DropdownMenuItem>
               
               <DropdownMenuSeparator />

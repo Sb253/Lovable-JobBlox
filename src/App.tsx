@@ -25,11 +25,11 @@ const App = () => {
           <Sonner />
           <BrowserRouter>
             <Routes>
-              <Route path="/" element={<LandingPage />} />
+              <Route path="/" element={<Index />} />
+              <Route path="/landing" element={<LandingPage />} />
               <Route path="/developer" element={<DeveloperLoginPage />} />
               <Route path="/auth" element={<MultiTenantAuth />} />
               <Route path="/saas/*" element={<MultiTenantLayout />} />
-              <Route path="/legacy" element={<Index />} />
               <Route path="/members" element={<MembersArea />} />
               <Route path="*" element={<NotFound />} />
             </Routes>
