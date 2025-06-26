@@ -1,76 +1,74 @@
 
-import { useState, useEffect } from 'react';
+import React, { useState, useEffect } from 'react';
 import { AppHeader } from "../AppHeader";
 import { UnifiedSidebar } from "../UnifiedSidebar";
 import { SectionRenderer } from "./SectionRenderer";
 import { sections } from "./SectionTypes";
-import { MobileSidebar } from "../mobile/MobileSidebar";
-import { useIsMobile } from "../../hooks/useIsMobile";
+import { OwnerAccess } from "../admin/OwnerAccess";
+import { useAuth } from "../../contexts/AuthContext";
 
 export const ResponsiveLayout = () => {
+  const { user } = useAuth();
   const [activeSection, setActiveSection] = useState('home');
   const [sidebarWidth, setSidebarWidth] = useState(256);
-  const [isMobileSidebarOpen, setIsMobileSidebarOpen] = useState(false);
-  const isMobile = useIsMobile();
+  const [needsOwnerAccess, setNeedsOwnerAccess] = useState(false);
+  const [hasOwnerAccess, setHasOwnerAccess] = useState(false);
 
   useEffect(() => {
-    // Load saved active section or default to home
+    // Load saved active section
     const savedSection = localStorage.getItem('activeSection');
     if (savedSection && sections.find(s => s.id === savedSection)) {
       setActiveSection(savedSection);
     }
 
-    // Listen for sidebar width changes (desktop only)
-    if (!isMobile) {
-      const handleSidebarToggle = () => {
-        const isCollapsed = JSON.parse(localStorage.getItem('sidebarCollapsed') || 'false');
-        setSidebarWidth(isCollapsed ? 64 : 256);
-      };
+    // Check if user needs owner access for admin functions
+    const ownerAccess = localStorage.getItem('ownerAccess') === 'true';
+    setHasOwnerAccess(ownerAccess);
 
-      handleSidebarToggle();
-      window.addEventListener('storage', handleSidebarToggle);
-      window.addEventListener('sidebarToggle', handleSidebarToggle);
-
-      return () => {
-        window.removeEventListener('storage', handleSidebarToggle);
-        window.removeEventListener('sidebarToggle', handleSidebarToggle);
-      };
-    }
-  }, [isMobile]);
-
-  // Listen for section changes from dashboard quick actions
-  useEffect(() => {
-    const handleSectionChange = (event: CustomEvent) => {
-      setActiveSection(event.detail);
+    // Listen for sidebar width changes
+    const handleSidebarToggle = () => {
+      const isCollapsed = JSON.parse(localStorage.getItem('sidebarCollapsed') || 'false');
+      setSidebarWidth(isCollapsed ? 64 : 256);
     };
 
-    window.addEventListener('sectionChange', handleSectionChange as EventListener);
-    return () => window.removeEventListener('sectionChange', handleSectionChange as EventListener);
+    handleSidebarToggle();
+    window.addEventListener('storage', handleSidebarToggle);
+    window.addEventListener('sidebarToggle', handleSidebarToggle);
+
+    return () => {
+      window.removeEventListener('storage', handleSidebarToggle);
+      window.removeEventListener('sidebarToggle', handleSidebarToggle);
+    };
   }, []);
 
-  // Save active section when it changes
   useEffect(() => {
     if (activeSection) {
       localStorage.setItem('activeSection', activeSection);
-      console.log('ResponsiveLayout: Active section changed to:', activeSection);
     }
   }, [activeSection]);
 
   const handleSectionChange = (section: string) => {
-    console.log('ResponsiveLayout: Section change requested:', section);
-    setActiveSection(section);
+    // Check if section requires owner access
+    const adminSections = ['admin-panel', 'user-management', 'system-settings'];
     
-    // Close mobile sidebar when navigating
-    if (isMobile) {
-      setIsMobileSidebarOpen(false);
+    if (adminSections.includes(section) && !hasOwnerAccess) {
+      setNeedsOwnerAccess(true);
+      return;
     }
-    
-    // Update URL without full page reload
+
+    setActiveSection(section);
     const newUrl = section === 'home' ? '/' : `/${section}`;
     window.history.pushState({ section }, '', newUrl);
   };
 
-  // Handle browser back/forward navigation
+  const handleOwnerAccessGranted = () => {
+    localStorage.setItem('ownerAccess', 'true');
+    setHasOwnerAccess(true);
+    setNeedsOwnerAccess(false);
+    setActiveSection('admin-panel');
+  };
+
+  // Handle browser navigation
   useEffect(() => {
     const handlePopState = (event: PopStateEvent) => {
       const path = window.location.pathname;
@@ -88,43 +86,30 @@ export const ResponsiveLayout = () => {
     return () => window.removeEventListener('popstate', handlePopState);
   }, []);
 
-  return (
-    <div className="min-h-screen bg-background">
-      <AppHeader 
-        onSectionChange={handleSectionChange}
-        onMobileSidebarToggle={() => setIsMobileSidebarOpen(!isMobileSidebarOpen)}
-        isMobile={isMobile}
+  if (needsOwnerAccess) {
+    return (
+      <OwnerAccess 
+        onAccessGranted={handleOwnerAccessGranted}
       />
-      
-      <div className="flex">
-        {/* Desktop Sidebar */}
-        {!isMobile && (
-          <UnifiedSidebar
-            activeSection={activeSection}
-            onSectionChange={handleSectionChange}
-            sections={sections}
-            isVisible={true}
-          />
-        )}
+    );
+  }
 
-        {/* Mobile Sidebar */}
-        {isMobile && (
-          <MobileSidebar
-            activeSection={activeSection}
-            onSectionChange={handleSectionChange}
-            sections={sections}
-            isOpen={isMobileSidebarOpen}
-            onClose={() => setIsMobileSidebarOpen(false)}
-          />
-        )}
+  return (
+    <div className="min-h-screen bg-background flex flex-col">
+      <AppHeader onSectionChange={handleSectionChange} />
+      
+      <div className="flex flex-1">
+        <UnifiedSidebar
+          activeSection={activeSection}
+          onSectionChange={handleSectionChange}
+          sections={sections}
+          isVisible={true}
+          hasOwnerAccess={hasOwnerAccess}
+        />
 
         <main 
-          className={`flex-1 transition-all duration-300 ${
-            isMobile ? 'pt-16' : 'pt-16'
-          }`}
-          style={{ 
-            marginLeft: isMobile ? '0' : `${sidebarWidth}px`
-          }}
+          className="flex-1 transition-all duration-300 pt-16" 
+          style={{ marginLeft: `${sidebarWidth}px` }}
         >
           <SectionRenderer activeSection={activeSection} />
         </main>

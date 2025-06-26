@@ -1,86 +1,75 @@
 
-import {
-  Home,
-  Users,
-  UserPlus,
-  Wrench,
-  Plus,
-  Calendar,
-  Clock,
-  FileText,
-  Receipt,
-  CreditCard,
-  Users2,
-  Package,
-  Package2,
-  Truck,
-  Car,
-  TrendingUp,
-  CalendarDays,
-  MessageCircle,
-  Star,
-  Camera,
-  Shield,
-  CheckCircle2,
-  UserCheck,
-  HardHat,
-  Database,
-  MapPin,
-  Target,
-  Map,
-  Building,
-  Calculator,
-  MessageSquare,
-  Bell,
-  Video,
-  User,
-  Cog
+import { 
+  Home, Users, Briefcase, Calendar, Clock, FileText, Receipt, 
+  CreditCard, UserCheck, Package, Truck, Settings, PieChart,
+  Map, Bell, MessageSquare, Camera, Shield, CheckSquare,
+  Building, Wrench, DollarSign, TrendingUp, Crown, Database,
+  BarChart3, Calculator, Zap, UserCog
 } from "lucide-react";
 
 export interface Section {
   id: string;
-  label: string;
+  title: string;
   icon: any;
+  category: string;
+  description?: string;
+  requiresOwnerAccess?: boolean;
 }
 
-export const sections = [
-  { id: 'home', label: 'Dashboard', icon: Home },
-  { id: 'customers', label: 'Customers', icon: Users },
-  { id: 'customer-form', label: 'Add Customer', icon: UserPlus },
-  { id: 'jobs', label: 'Jobs', icon: Wrench },
-  { id: 'job-form', label: 'Create Job', icon: Plus },
-  { id: 'schedule', label: 'Schedule', icon: Calendar },
-  { id: 'time-tracking', label: 'Time Tracking', icon: Clock },
-  { id: 'estimates', label: 'Estimates', icon: FileText },
-  { id: 'invoices', label: 'Invoices', icon: Receipt },
-  { id: 'expenses', label: 'Expenses', icon: CreditCard },
-  { id: 'team-management', label: 'Team Management', icon: Users2 },
-  { id: 'materials-services', label: 'Materials & Services', icon: Package },
-  { id: 'inventory', label: 'Inventory', icon: Package2 },
-  { id: 'equipment', label: 'Equipment', icon: Truck },
-  { id: 'vehicles', label: 'Vehicles', icon: Car },
-  { id: 'pipeline', label: 'Sales Pipeline', icon: TrendingUp },
-  { id: 'client-appointment', label: 'Appointments', icon: CalendarDays },
-  { id: 'communication', label: 'Communication', icon: MessageCircle },
-  { id: 'reviews', label: 'Reviews', icon: Star },
-  { id: 'photos', label: 'Photo Documentation', icon: Camera },
-  { id: 'safety', label: 'Safety Management', icon: Shield },
-  { id: 'quality', label: 'Quality Control', icon: CheckCircle2 },
-  { id: 'hr-features', label: 'HR Features', icon: UserCheck },
-  { id: 'subcontractor-management', label: 'Subcontractors', icon: HardHat },
-  { id: 'advanced-inventory', label: 'Advanced Inventory', icon: Database },
-  { id: 'employee-locations', label: 'Employee Locations', icon: MapPin },
-  { id: 'radius-assignment', label: 'Radius Assignment', icon: Target },
-  { id: 'location-management', label: 'Location Management', icon: Map },
-  { id: 'branch-management', label: 'Branch Management', icon: Building },
-  { id: 'goals', label: 'Goals & KPIs', icon: Target },
-  { id: 'tax-financial', label: 'Tax & Financial', icon: Calculator },
-  { id: 'payment-integration', label: 'Payment Integration', icon: CreditCard },
-  { id: 'profit-analysis', label: 'Profit Analysis', icon: TrendingUp },
-  { id: 'team-chat', label: 'Team Chat', icon: MessageSquare },
-  { id: 'notifications', label: 'Notifications', icon: Bell },
-  { id: 'map-view', label: 'Map View', icon: Map },
-  { id: 'back-office', label: 'Back Office', icon: Cog },
-  { id: 'internal-meetings', label: 'Internal Meetings', icon: Video },
-  { id: 'profile', label: 'Profile', icon: User }
+export const sections: Section[] = [
+  // Core Business
+  { id: 'home', title: 'Dashboard', icon: Home, category: 'core' },
+  { id: 'customers', title: 'Customers', icon: Users, category: 'core' },
+  { id: 'jobs', title: 'Jobs', icon: Briefcase, category: 'core' },
+  { id: 'schedule', title: 'Schedule', icon: Calendar, category: 'core' },
+  
+  // Operations
+  { id: 'time-tracking', title: 'Time Tracking', icon: Clock, category: 'operations' },
+  { id: 'estimates', title: 'Estimates', icon: FileText, category: 'operations' },
+  { id: 'invoices', title: 'Invoices', icon: Receipt, category: 'operations' },
+  { id: 'expenses', title: 'Expenses', icon: CreditCard, category: 'operations' },
+  
+  // Team & Resources
+  { id: 'team-management', title: 'Team', icon: UserCheck, category: 'team' },
+  { id: 'inventory', title: 'Inventory', icon: Package, category: 'team' },
+  { id: 'equipment', title: 'Equipment', icon: Wrench, category: 'team' },
+  { id: 'vehicles', title: 'Vehicles', icon: Truck, category: 'team' },
+  
+  // Advanced Features  
+  { id: 'pipeline', title: 'Sales Pipeline', icon: TrendingUp, category: 'advanced' },
+  { id: 'communication', title: 'Communication', icon: MessageSquare, category: 'advanced' },
+  { id: 'reviews', title: 'Reviews', icon: CheckSquare, category: 'advanced' },
+  { id: 'photos', title: 'Photos', icon: Camera, category: 'advanced' },
+  
+  // Analytics & Reports
+  { id: 'goals', title: 'KPI Dashboard', icon: BarChart3, category: 'analytics' },
+  { id: 'profit-analysis', title: 'Profit Analysis', icon: Calculator, category: 'analytics' },
+  { id: 'tax-financial', title: 'Tax & Financial', icon: DollarSign, category: 'analytics' },
+  
+  // Management
+  { id: 'branch-management', title: 'Multi-Branch', icon: Building, category: 'management' },
+  { id: 'location-management', title: 'Locations', icon: Map, category: 'management' },
+  { id: 'safety', title: 'Safety', icon: Shield, category: 'management' },
+  { id: 'quality', title: 'Quality Control', icon: CheckSquare, category: 'management' },
+  
+  // Admin (Owner Access Required)
+  { id: 'admin-panel', title: 'Admin Panel', icon: Crown, category: 'admin', requiresOwnerAccess: true },
+  { id: 'user-management', title: 'User Management', icon: UserCog, category: 'admin', requiresOwnerAccess: true },
+  { id: 'system-settings', title: 'System Settings', icon: Database, category: 'admin', requiresOwnerAccess: true },
+  
+  // Tools
+  { id: 'notifications', title: 'Notifications', icon: Bell, category: 'tools' },
+  { id: 'map-view', title: 'Map View', icon: Map, category: 'tools' },
+  { id: 'back-office', title: 'Settings', icon: Settings, category: 'tools' },
 ];
+
+export const sectionCategories = {
+  core: 'Core Business',
+  operations: 'Operations',
+  team: 'Team & Resources', 
+  advanced: 'Advanced Features',
+  analytics: 'Analytics & Reports',
+  management: 'Management',
+  admin: 'Administration',
+  tools: 'Tools & Settings'
+};

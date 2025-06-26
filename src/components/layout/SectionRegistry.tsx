@@ -1,4 +1,3 @@
-
 import React, { lazy } from 'react';
 
 // Lazy load components for better performance - Fixed to handle named exports
@@ -40,6 +39,9 @@ const NotificationCenter = lazy(() => import('../NotificationCenter').then(m => 
 const MapView = lazy(() => import('../MapView').then(m => ({ default: m.MapView })));
 const BackOfficeSettings = lazy(() => import('../BackOfficeSettings').then(m => ({ default: m.BackOfficeSettings })));
 const InternalMeetings = lazy(() => import('../InternalMeetings').then(m => ({ default: m.InternalMeetings })));
+
+// Add new admin components
+const AdminPanel = lazy(() => import('../admin/AdminPanel').then(m => ({ default: m.AdminPanel })));
 
 // Sample job data for MapView
 const sampleJobs = [
@@ -115,5 +117,10 @@ export const createSectionRegistry = () => {
     'back-office': <BackOfficeSettings />,
     'internal-meetings': <InternalMeetings />,
     profile: <div className="p-6"><h1 className="text-2xl font-bold">Profile Settings</h1><p className="text-muted-foreground mt-2">Manage your profile and account settings.</p></div>,
+    
+    // Add new admin sections
+    'admin-panel': <AdminPanel />,
+    'user-management': <AdminPanel />,
+    'system-settings': <AdminPanel />,
   };
 };
