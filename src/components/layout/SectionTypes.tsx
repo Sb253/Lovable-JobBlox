@@ -1,3 +1,4 @@
+
 import {
   Home,
   Users,
@@ -32,7 +33,8 @@ import {
   MessageSquare,
   Bell,
   Video,
-  User
+  User,
+  Cog
 } from "lucide-react";
 
 export interface Section {
@@ -78,7 +80,7 @@ export const sections = [
   { id: 'team-chat', label: 'Team Chat', icon: MessageSquare },
   { id: 'notifications', label: 'Notifications', icon: Bell },
   { id: 'map-view', label: 'Map View', icon: Map },
-  { id: 'back-office', label: 'Back Office', icon: Settings },
+  { id: 'back-office', label: 'Back Office', icon: Cog },
   { id: 'internal-meetings', label: 'Internal Meetings', icon: Video },
   { id: 'profile', label: 'Profile', icon: User }
 ];

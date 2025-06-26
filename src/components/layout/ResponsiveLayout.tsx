@@ -4,31 +4,16 @@ import { AppHeader } from "../AppHeader";
 import { UnifiedSidebar } from "../UnifiedSidebar";
 import { SectionRenderer } from "./SectionRenderer";
 import { sections } from "./SectionTypes";
-import { AuthProvider } from "../../contexts/AuthContext";
-import { ProtectedRoute } from "../auth/ProtectedRoute";
-import { InvitationAcceptance } from "../auth/InvitationAcceptance";
 import { MobileSidebar } from "../mobile/MobileSidebar";
 import { useIsMobile } from "../../hooks/useIsMobile";
 
 export const ResponsiveLayout = () => {
   const [activeSection, setActiveSection] = useState('home');
   const [sidebarWidth, setSidebarWidth] = useState(256);
-  const [isInvitationFlow, setIsInvitationFlow] = useState(false);
-  const [invitationToken, setInvitationToken] = useState('');
   const [isMobileSidebarOpen, setIsMobileSidebarOpen] = useState(false);
   const isMobile = useIsMobile();
 
   useEffect(() => {
-    // Check if this is an invitation acceptance flow
-    const urlParams = new URLSearchParams(window.location.search);
-    const token = urlParams.get('token');
-    
-    if (token && window.location.pathname === '/accept-invitation') {
-      setInvitationToken(token);
-      setIsInvitationFlow(true);
-      return;
-    }
-
     // Load saved active section or default to home
     const savedSection = localStorage.getItem('activeSection');
     if (savedSection && sections.find(s => s.id === savedSection)) {
@@ -53,6 +38,16 @@ export const ResponsiveLayout = () => {
     }
   }, [isMobile]);
 
+  // Listen for section changes from dashboard quick actions
+  useEffect(() => {
+    const handleSectionChange = (event: CustomEvent) => {
+      setActiveSection(event.detail);
+    };
+
+    window.addEventListener('sectionChange', handleSectionChange as EventListener);
+    return () => window.removeEventListener('sectionChange', handleSectionChange as EventListener);
+  }, []);
+
   // Save active section when it changes
   useEffect(() => {
     if (activeSection) {
@@ -75,11 +70,6 @@ export const ResponsiveLayout = () => {
     window.history.pushState({ section }, '', newUrl);
   };
 
-  const handleInvitationComplete = () => {
-    setIsInvitationFlow(false);
-    window.history.pushState({}, '', '/');
-  };
-
   // Handle browser back/forward navigation
   useEffect(() => {
     const handlePopState = (event: PopStateEvent) => {
@@ -98,62 +88,47 @@ export const ResponsiveLayout = () => {
     return () => window.removeEventListener('popstate', handlePopState);
   }, []);
 
-  if (isInvitationFlow) {
-    return (
-      <AuthProvider>
-        <InvitationAcceptance 
-          token={invitationToken} 
-          onAcceptanceComplete={handleInvitationComplete}
-        />
-      </AuthProvider>
-    );
-  }
-
   return (
-    <AuthProvider>
-      <ProtectedRoute>
-        <div className="min-h-screen bg-background">
-          <AppHeader 
+    <div className="min-h-screen bg-background">
+      <AppHeader 
+        onSectionChange={handleSectionChange}
+        onMobileSidebarToggle={() => setIsMobileSidebarOpen(!isMobileSidebarOpen)}
+        isMobile={isMobile}
+      />
+      
+      <div className="flex">
+        {/* Desktop Sidebar */}
+        {!isMobile && (
+          <UnifiedSidebar
+            activeSection={activeSection}
             onSectionChange={handleSectionChange}
-            onMobileSidebarToggle={() => setIsMobileSidebarOpen(!isMobileSidebarOpen)}
-            isMobile={isMobile}
+            sections={sections}
+            isVisible={true}
           />
-          
-          <div className="flex">
-            {/* Desktop Sidebar */}
-            {!isMobile && (
-              <UnifiedSidebar
-                activeSection={activeSection}
-                onSectionChange={handleSectionChange}
-                sections={sections}
-                isVisible={true}
-              />
-            )}
+        )}
 
-            {/* Mobile Sidebar */}
-            {isMobile && (
-              <MobileSidebar
-                activeSection={activeSection}
-                onSectionChange={handleSectionChange}
-                sections={sections}
-                isOpen={isMobileSidebarOpen}
-                onClose={() => setIsMobileSidebarOpen(false)}
-              />
-            )}
+        {/* Mobile Sidebar */}
+        {isMobile && (
+          <MobileSidebar
+            activeSection={activeSection}
+            onSectionChange={handleSectionChange}
+            sections={sections}
+            isOpen={isMobileSidebarOpen}
+            onClose={() => setIsMobileSidebarOpen(false)}
+          />
+        )}
 
-            <main 
-              className={`flex-1 transition-all duration-300 ${
-                isMobile ? 'pt-16' : 'pt-16'
-              }`}
-              style={{ 
-                marginLeft: isMobile ? '0' : `${sidebarWidth}px`
-              }}
-            >
-              <SectionRenderer activeSection={activeSection} />
-            </main>
-          </div>
-        </div>
-      </ProtectedRoute>
-    </AuthProvider>
+        <main 
+          className={`flex-1 transition-all duration-300 ${
+            isMobile ? 'pt-16' : 'pt-16'
+          }`}
+          style={{ 
+            marginLeft: isMobile ? '0' : `${sidebarWidth}px`
+          }}
+        >
+          <SectionRenderer activeSection={activeSection} />
+        </main>
+      </div>
+    </div>
   );
 };
