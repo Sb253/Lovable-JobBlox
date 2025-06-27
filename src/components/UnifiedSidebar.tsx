@@ -15,13 +15,15 @@ interface UnifiedSidebarProps {
   onSectionChange: (section: string) => void;
   sections: SidebarSection[];
   isVisible?: boolean;
+  hasOwnerAccess?: boolean;
 }
 
 export const UnifiedSidebar = ({ 
   activeSection, 
   onSectionChange, 
   sections, 
-  isVisible = true 
+  isVisible = true,
+  hasOwnerAccess = false
 }: UnifiedSidebarProps) => {
   const companyData = useCompanyDataSidebar();
   const {
