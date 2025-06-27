@@ -1,126 +1,107 @@
-import React, { lazy } from 'react';
 
-// Lazy load components for better performance - Fixed to handle named exports
-const MainDashboard = lazy(() => import('../dashboard/MainDashboard').then(m => ({ default: m.MainDashboard })));
-const CustomerList = lazy(() => import('../CustomerList').then(m => ({ default: m.CustomerList })));
-const CustomerForm = lazy(() => import('../CustomerForm').then(m => ({ default: m.CustomerForm })));
-const JobList = lazy(() => import('../JobList').then(m => ({ default: m.JobList })));
-const JobForm = lazy(() => import('../JobForm').then(m => ({ default: m.JobForm })));
-const ScheduleView = lazy(() => import('../ScheduleView').then(m => ({ default: m.ScheduleView })));
-const TimeTracking = lazy(() => import('../TimeTracking').then(m => ({ default: m.TimeTracking })));
-const EstimateList = lazy(() => import('../EstimateList').then(m => ({ default: m.EstimateList })));
-const InvoiceList = lazy(() => import('../InvoiceList').then(m => ({ default: m.InvoiceList })));
-const ExpenseList = lazy(() => import('../ExpenseList').then(m => ({ default: m.ExpenseList })));
-const TeamManagement = lazy(() => import('../TeamManagement').then(m => ({ default: m.TeamManagement })));
-const MaterialsAndServices = lazy(() => import('../MaterialsAndServices').then(m => ({ default: m.MaterialsAndServices })));
-const MaterialInventory = lazy(() => import('../MaterialInventory').then(m => ({ default: m.MaterialInventory })));
-const EquipmentTracking = lazy(() => import('../EquipmentTracking').then(m => ({ default: m.EquipmentTracking })));
-const VehicleManagement = lazy(() => import('../VehicleManagement').then(m => ({ default: m.VehicleManagement })));
-const Pipeline = lazy(() => import('../Pipeline').then(m => ({ default: m.Pipeline })));
-const ClientAppointment = lazy(() => import('../ClientAppointment').then(m => ({ default: m.ClientAppointment })));
-const RealTimeChat = lazy(() => import('../RealTimeChat').then(m => ({ default: m.RealTimeChat })));
-const ReviewManagement = lazy(() => import('../ReviewManagement').then(m => ({ default: m.ReviewManagement })));
-const PhotoDocumentation = lazy(() => import('../PhotoDocumentation').then(m => ({ default: m.PhotoDocumentation })));
-const SafetyManagement = lazy(() => import('../SafetyManagement').then(m => ({ default: m.SafetyManagement })));
-const QualityControl = lazy(() => import('../QualityControl').then(m => ({ default: m.QualityControl })));
-const HRFeatures = lazy(() => import('../HRFeatures').then(m => ({ default: m.HRFeatures })));
-const SubcontractorManagement = lazy(() => import('../SubcontractorManagement').then(m => ({ default: m.SubcontractorManagement })));
-const AdvancedInventorySystem = lazy(() => import('../AdvancedInventorySystem').then(m => ({ default: m.AdvancedInventorySystem })));
-const EmployeeLocationManager = lazy(() => import('../EmployeeLocationManager').then(m => ({ default: m.EmployeeLocationManager })));
-const RadiusAssignment = lazy(() => import('../RadiusAssignment').then(m => ({ default: m.RadiusAssignment })));
-const LocationManagement = lazy(() => import('../LocationManagement').then(m => ({ default: m.LocationManagement })));
-const BranchManagement = lazy(() => import('../BranchManagement').then(m => ({ default: m.BranchManagement })));
-const KPIDashboard = lazy(() => import('../KPIDashboard').then(m => ({ default: m.KPIDashboard })));
-const TaxAndFinancialSection = lazy(() => import('../TaxAndFinancialSection').then(m => ({ default: m.TaxAndFinancialSection })));
-const PaymentIntegrationHub = lazy(() => import('../PaymentIntegrationHub').then(m => ({ default: m.PaymentIntegrationHub })));
-const ProfitMarginAnalysis = lazy(() => import('../ProfitMarginAnalysis').then(m => ({ default: m.ProfitMarginAnalysis })));
-const EmployeeChat = lazy(() => import('../EmployeeChat').then(m => ({ default: m.EmployeeChat })));
-const NotificationCenter = lazy(() => import('../NotificationCenter').then(m => ({ default: m.NotificationCenter })));
-const MapView = lazy(() => import('../MapView').then(m => ({ default: m.MapView })));
-const BackOfficeSettings = lazy(() => import('../BackOfficeSettings').then(m => ({ default: m.BackOfficeSettings })));
-const InternalMeetings = lazy(() => import('../InternalMeetings').then(m => ({ default: m.InternalMeetings })));
+import React from 'react';
 
-// Add new admin components
-const AdminPanel = lazy(() => import('../admin/AdminPanel').then(m => ({ default: m.AdminPanel })));
+// Lazy load all components for better performance
+const Dashboard = React.lazy(() => import("../Dashboard").then(m => ({ default: m.Dashboard })));
+const CustomerList = React.lazy(() => import("../CustomerList").then(m => ({ default: m.CustomerList })));
+const JobList = React.lazy(() => import("../JobList").then(m => ({ default: m.JobList })));
+const InvoiceList = React.lazy(() => import("../InvoiceList").then(m => ({ default: m.InvoiceList })));
+const ExpenseList = React.lazy(() => import("../ExpenseList").then(m => ({ default: m.ExpenseList })));
+const MapView = React.lazy(() => import("../MapView").then(m => ({ default: m.MapView })));
 
-// Sample job data for MapView
-const sampleJobs = [
-  {
-    id: '1',
-    title: 'Kitchen Renovation',
-    customer: 'John Smith',
-    address: '123 Main St, Anytown, USA',
-    coordinates: [-74.006, 40.7128] as [number, number],
-    status: 'scheduled' as const,
-    type: 'job' as const,
-    time: 'Today 2:00 PM'
-  },
-  {
-    id: '2',
-    title: 'Bathroom Repair',
-    customer: 'ABC Construction',
-    address: '456 Business Ave, City, USA',
-    coordinates: [-74.0, 40.72] as [number, number],
-    status: 'in-progress' as const,
-    type: 'job' as const,
-    time: 'Tomorrow 9:00 AM'
-  }
-];
+// New pages
+const PasswordRecoveryPage = React.lazy(() => import("../auth/PasswordRecoveryPage").then(m => ({ default: m.PasswordRecoveryPage })));
+const UserProfilePage = React.lazy(() => import("../profile/UserProfilePage").then(m => ({ default: m.UserProfilePage })));
+const BillingPage = React.lazy(() => import("../billing/BillingPage").then(m => ({ default: m.BillingPage })));
+const HelpCenterPage = React.lazy(() => import("../support/HelpCenterPage").then(m => ({ default: m.HelpCenterPage })));
+const OnboardingFlow = React.lazy(() => import("../onboarding/OnboardingFlow").then(m => ({ default: m.OnboardingFlow })));
+const APIDocumentationPage = React.lazy(() => import("../api/APIDocumentationPage").then(m => ({ default: m.APIDocumentationPage })));
+
+// Placeholder components for sections that need implementation
+const PlaceholderSection = ({ sectionName }: { sectionName: string }) => (
+  <div className="p-6">
+    <div className="text-center text-muted-foreground">
+      <h2 className="text-2xl font-semibold mb-2">{sectionName}</h2>
+      <p>This section is under development.</p>
+    </div>
+  </div>
+);
 
 export const createSectionRegistry = () => {
+  // Get demo data for map view
+  const { demoDataService } = require("../../services/demoDataService");
+  const demoJobs = demoDataService.getJobs();
+  const transformedJobs = demoJobs.map((job: any) => ({
+    id: job.id,
+    title: job.title,
+    customer: job.customerName,
+    address: job.location,
+    coordinates: job.coordinates,
+    status: job.status,
+    type: 'job' as const,
+    time: new Date(job.startDate).toLocaleDateString('en-US', {
+      weekday: 'short',
+      month: 'short',
+      day: 'numeric',
+      hour: 'numeric',
+      minute: '2-digit'
+    })
+  }));
+
   return {
-    home: <MainDashboard onSectionChange={(section) => {
-      const event = new CustomEvent('sectionChange', { detail: section });
-      window.dispatchEvent(event);
-    }} />,
-    customers: <CustomerList />,
-    'customer-form': <CustomerForm onClose={() => {
-      const event = new CustomEvent('sectionChange', { detail: 'customers' });
-      window.dispatchEvent(event);
-    }} />,
-    jobs: <JobList />,
-    'job-form': <JobForm onClose={() => {
-      const event = new CustomEvent('sectionChange', { detail: 'jobs' });
-      window.dispatchEvent(event);
-    }} />,
-    schedule: <ScheduleView />,
-    'time-tracking': <TimeTracking />,
-    estimates: <EstimateList />,
-    invoices: <InvoiceList />,
-    expenses: <ExpenseList />,
-    'team-management': <TeamManagement />,
-    'materials-services': <MaterialsAndServices />,
-    inventory: <MaterialInventory />,
-    equipment: <EquipmentTracking />,
-    vehicles: <VehicleManagement />,
-    pipeline: <Pipeline />,
-    'client-appointment': <ClientAppointment />,
-    communication: <RealTimeChat />,
-    reviews: <ReviewManagement />,
-    photos: <PhotoDocumentation />,
-    safety: <SafetyManagement />,
-    quality: <QualityControl />,
-    'hr-features': <HRFeatures />,
-    'subcontractor-management': <SubcontractorManagement />,
-    'advanced-inventory': <AdvancedInventorySystem />,
-    'employee-locations': <EmployeeLocationManager />,
-    'radius-assignment': <RadiusAssignment />,
-    'location-management': <LocationManagement />,
-    'branch-management': <BranchManagement />,
-    goals: <KPIDashboard />,
-    'tax-financial': <TaxAndFinancialSection />,
-    'payment-integration': <PaymentIntegrationHub />,
-    'profit-analysis': <ProfitMarginAnalysis />,
-    'team-chat': <EmployeeChat />,
-    notifications: <NotificationCenter />,
-    'map-view': <MapView jobs={sampleJobs} />,
-    'back-office': <BackOfficeSettings />,
-    'internal-meetings': <InternalMeetings />,
-    profile: <div className="p-6"><h1 className="text-2xl font-bold">Profile Settings</h1><p className="text-muted-foreground mt-2">Manage your profile and account settings.</p></div>,
+    // Core sections
+    'home': <Dashboard />,
+    'dashboard': <Dashboard />,
     
-    // Add new admin sections
-    'admin-panel': <AdminPanel />,
-    'user-management': <AdminPanel />,
-    'system-settings': <AdminPanel />,
+    // Customer Management
+    'customers': <CustomerList />,
+    'pipeline': <PlaceholderSection sectionName="Sales Pipeline" />,
+    'communication': <PlaceholderSection sectionName="Communication" />,
+    'reviews': <PlaceholderSection sectionName="Review Management" />,
+    
+    // Job Management
+    'jobs': <JobList />,
+    'schedule': <PlaceholderSection sectionName="Schedule View" />,
+    'time-tracking': <PlaceholderSection sectionName="Time Tracking" />,
+    'photos': <PlaceholderSection sectionName="Photo Documentation" />,
+    'safety': <PlaceholderSection sectionName="Safety Management" />,
+    'quality': <PlaceholderSection sectionName="Quality Control" />,
+    
+    // Financial Management
+    'estimates': <PlaceholderSection sectionName="Estimates" />,
+    'invoices': <InvoiceList />,
+    'expenses': <ExpenseList />,
+    'goals': <PlaceholderSection sectionName="KPI Dashboard" />,
+    'profit-analysis': <PlaceholderSection sectionName="Profit Analysis" />,
+    'tax-financial': <PlaceholderSection sectionName="Tax & Financial" />,
+    
+    // Team & Resources
+    'team-management': <PlaceholderSection sectionName="Team Management" />,
+    'inventory': <PlaceholderSection sectionName="Inventory" />,
+    'equipment': <PlaceholderSection sectionName="Equipment Tracking" />,
+    'vehicles': <PlaceholderSection sectionName="Vehicle Management" />,
+    
+    // Management
+    'branch-management': <PlaceholderSection sectionName="Multi-Branch Management" />,
+    'location-management': <PlaceholderSection sectionName="Location Management" />,
+    
+    // Account & Profile
+    'profile': <UserProfilePage />,
+    'billing': <BillingPage />,
+    'onboarding': <OnboardingFlow />,
+    
+    // Support & Resources
+    'help-center': <HelpCenterPage />,
+    'api-docs': <APIDocumentationPage />,
+    
+    // Admin sections
+    'admin-panel': <PlaceholderSection sectionName="Admin Panel" />,
+    'user-management': <PlaceholderSection sectionName="User Management" />,
+    'system-settings': <PlaceholderSection sectionName="System Settings" />,
+    
+    // Tools
+    'notifications': <PlaceholderSection sectionName="Notifications" />,
+    'back-office': <PlaceholderSection sectionName="Settings" />,
+    'map-view': <MapView jobs={transformedJobs} />
   };
 };

@@ -4,7 +4,8 @@ import {
   CreditCard, UserCheck, Package, Truck, Settings, PieChart,
   Map, Bell, MessageSquare, Camera, Shield, CheckSquare,
   Building, Wrench, DollarSign, TrendingUp, Crown, Database,
-  BarChart3, Calculator, Zap, UserCog
+  BarChart3, Calculator, Zap, UserCog, User, HelpCircle,
+  Key, Code, Star, PlayCircle
 } from "lucide-react";
 
 export interface Section {
@@ -52,6 +53,15 @@ export const sections: Section[] = [
   { id: 'safety', title: 'Safety', icon: Shield, category: 'management' },
   { id: 'quality', title: 'Quality Control', icon: CheckSquare, category: 'management' },
   
+  // Account & Profile
+  { id: 'profile', title: 'Profile', icon: User, category: 'account' },
+  { id: 'billing', title: 'Billing', icon: Star, category: 'account' },
+  { id: 'onboarding', title: 'Onboarding', icon: PlayCircle, category: 'account' },
+  
+  // Support & Resources
+  { id: 'help-center', title: 'Help Center', icon: HelpCircle, category: 'support' },
+  { id: 'api-docs', title: 'API Documentation', icon: Code, category: 'support' },
+  
   // Admin (Owner Access Required)
   { id: 'admin-panel', title: 'Admin Panel', icon: Crown, category: 'admin', requiresOwnerAccess: true },
   { id: 'user-management', title: 'User Management', icon: UserCog, category: 'admin', requiresOwnerAccess: true },
@@ -70,6 +80,8 @@ export const sectionCategories = {
   advanced: 'Advanced Features',
   analytics: 'Analytics & Reports',
   management: 'Management',
+  account: 'Account & Profile',
+  support: 'Support & Resources',
   admin: 'Administration',
   tools: 'Tools & Settings'
 };
