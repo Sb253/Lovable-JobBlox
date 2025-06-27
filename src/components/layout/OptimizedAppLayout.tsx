@@ -1,13 +1,21 @@
-
 import React, { useState, useEffect, memo, useCallback, useMemo } from 'react';
 import { AppHeader } from "../AppHeader";
 import { OptimizedUnifiedSidebar } from "../optimized/OptimizedUnifiedSidebar";
 import { OptimizedSectionRenderer } from "./OptimizedSectionRenderer";
-import { sections } from "./SectionTypes";
+import { sections, Section } from "./SectionTypes";
 import { AuthProvider } from "../../contexts/AuthContext";
 import { ProtectedRoute } from "../auth/ProtectedRoute";
 import { InvitationAcceptance } from "../auth/InvitationAcceptance";
 import { usePerformanceMonitor, logBundleMetrics } from "../../utils/performanceUtils";
+
+// Convert Section to SidebarSection format
+const mapSectionsToSidebarSections = (sections: Section[]) => {
+  return sections.map(section => ({
+    id: section.id,
+    label: section.title, // Map title to label
+    icon: section.icon
+  }));
+};
 
 export const OptimizedAppLayout = memo(() => {
   usePerformanceMonitor('OptimizedAppLayout');
@@ -17,8 +25,8 @@ export const OptimizedAppLayout = memo(() => {
   const [isInvitationFlow, setIsInvitationFlow] = useState(false);
   const [invitationToken, setInvitationToken] = useState('');
 
-  // Memoize sections to prevent unnecessary re-calculations
-  const memoizedSections = useMemo(() => sections, []);
+  // Memoize converted sections to prevent unnecessary re-calculations
+  const memoizedSidebarSections = useMemo(() => mapSectionsToSidebarSections(sections), []);
 
   useEffect(() => {
     // Log bundle metrics on initial load
@@ -112,7 +120,7 @@ export const OptimizedAppLayout = memo(() => {
         <OptimizedUnifiedSidebar
           activeSection={activeSection}
           onSectionChange={handleSectionChange}
-          sections={memoizedSections}
+          sections={memoizedSidebarSections}
           isVisible={true}
         />
 
@@ -124,7 +132,7 @@ export const OptimizedAppLayout = memo(() => {
         </main>
       </div>
     </div>
-  ), [activeSection, handleSectionChange, memoizedSections, sidebarWidth]);
+  ), [activeSection, handleSectionChange, memoizedSidebarSections, sidebarWidth]);
 
   if (isInvitationFlow) {
     return (

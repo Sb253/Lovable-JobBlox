@@ -1,11 +1,19 @@
-
 import React, { useState, useEffect } from 'react';
 import { AppHeader } from "../AppHeader";
 import { UnifiedSidebar } from "../UnifiedSidebar";
 import { SectionRenderer } from "./SectionRenderer";
-import { sections } from "./SectionTypes";
+import { sections, Section } from "./SectionTypes";
 import { OwnerAccess } from "../admin/OwnerAccess";
 import { useAuth } from "../../contexts/AuthContext";
+
+// Convert Section to SidebarSection format
+const mapSectionsToSidebarSections = (sections: Section[]) => {
+  return sections.map(section => ({
+    id: section.id,
+    label: section.title, // Map title to label
+    icon: section.icon
+  }));
+};
 
 export const ResponsiveLayout = () => {
   const { user } = useAuth();
@@ -13,6 +21,9 @@ export const ResponsiveLayout = () => {
   const [sidebarWidth, setSidebarWidth] = useState(256);
   const [needsOwnerAccess, setNeedsOwnerAccess] = useState(false);
   const [hasOwnerAccess, setHasOwnerAccess] = useState(false);
+
+  // Convert sections for sidebar
+  const sidebarSections = mapSectionsToSidebarSections(sections);
 
   useEffect(() => {
     // Load saved active section
@@ -102,7 +113,7 @@ export const ResponsiveLayout = () => {
         <UnifiedSidebar
           activeSection={activeSection}
           onSectionChange={handleSectionChange}
-          sections={sections}
+          sections={sidebarSections}
           isVisible={true}
           hasOwnerAccess={hasOwnerAccess}
         />
