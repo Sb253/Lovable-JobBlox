@@ -5,7 +5,7 @@ import {
   Map, Bell, MessageSquare, Camera, Shield, CheckSquare,
   Building, Wrench, DollarSign, TrendingUp, Crown, Database,
   BarChart3, Calculator, Zap, UserCog, User, HelpCircle,
-  Key, Code, Star, PlayCircle
+  Key, Code, Star, PlayCircle, Activity, Plug
 } from "lucide-react";
 
 export interface Section {
@@ -21,6 +21,7 @@ export const sections: Section[] = [
   // Core Business
   { id: 'home', title: 'Dashboard', icon: Home, category: 'core' },
   { id: 'customers', title: 'Customers', icon: Users, category: 'core' },
+  { id: 'customer-form', title: 'Add Customer', icon: Users, category: 'core' },
   { id: 'jobs', title: 'Jobs', icon: Briefcase, category: 'core' },
   { id: 'schedule', title: 'Schedule', icon: Calendar, category: 'core' },
   
@@ -41,11 +42,14 @@ export const sections: Section[] = [
   { id: 'communication', title: 'Communication', icon: MessageSquare, category: 'advanced' },
   { id: 'reviews', title: 'Reviews', icon: CheckSquare, category: 'advanced' },
   { id: 'photos', title: 'Photos', icon: Camera, category: 'advanced' },
+  { id: 'client-appointment', title: 'Appointments', icon: Calendar, category: 'advanced' },
   
   // Analytics & Reports
   { id: 'goals', title: 'KPI Dashboard', icon: BarChart3, category: 'analytics' },
+  { id: 'reports', title: 'Reports Center', icon: PieChart, category: 'analytics' },
   { id: 'profit-analysis', title: 'Profit Analysis', icon: Calculator, category: 'analytics' },
   { id: 'tax-financial', title: 'Tax & Financial', icon: DollarSign, category: 'analytics' },
+  { id: 'activity-feed', title: 'Activity Feed', icon: Activity, category: 'analytics' },
   
   // Management
   { id: 'branch-management', title: 'Multi-Branch', icon: Building, category: 'management' },
@@ -62,15 +66,19 @@ export const sections: Section[] = [
   { id: 'help-center', title: 'Help Center', icon: HelpCircle, category: 'support' },
   { id: 'api-docs', title: 'API Documentation', icon: Code, category: 'support' },
   
+  // Integrations & Tools
+  { id: 'integrations', title: 'Integrations', icon: Plug, category: 'tools' },
+  { id: 'notifications', title: 'Notifications', icon: Bell, category: 'tools' },
+  { id: 'map-view', title: 'Map View', icon: Map, category: 'tools' },
+  { id: 'back-office', title: 'Settings', icon: Settings, category: 'tools' },
+  
   // Admin (Owner Access Required)
   { id: 'admin-panel', title: 'Admin Panel', icon: Crown, category: 'admin', requiresOwnerAccess: true },
   { id: 'user-management', title: 'User Management', icon: UserCog, category: 'admin', requiresOwnerAccess: true },
   { id: 'system-settings', title: 'System Settings', icon: Database, category: 'admin', requiresOwnerAccess: true },
   
-  // Tools
-  { id: 'notifications', title: 'Notifications', icon: Bell, category: 'tools' },
-  { id: 'map-view', title: 'Map View', icon: Map, category: 'tools' },
-  { id: 'back-office', title: 'Settings', icon: Settings, category: 'tools' },
+  // Auth & Recovery
+  { id: 'password-recovery', title: 'Password Recovery', icon: Key, category: 'auth' },
 ];
 
 export const sectionCategories = {
@@ -83,5 +91,6 @@ export const sectionCategories = {
   account: 'Account & Profile',
   support: 'Support & Resources',
   admin: 'Administration',
-  tools: 'Tools & Settings'
+  tools: 'Tools & Settings',
+  auth: 'Authentication'
 };

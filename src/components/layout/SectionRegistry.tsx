@@ -9,13 +9,25 @@ const InvoiceList = React.lazy(() => import("../InvoiceList").then(m => ({ defau
 const ExpenseList = React.lazy(() => import("../ExpenseList").then(m => ({ default: m.ExpenseList })));
 const MapView = React.lazy(() => import("../MapView").then(m => ({ default: m.MapView })));
 
-// New pages
+// Auth and profile pages
 const PasswordRecoveryPage = React.lazy(() => import("../auth/PasswordRecoveryPage").then(m => ({ default: m.PasswordRecoveryPage })));
 const UserProfilePage = React.lazy(() => import("../profile/UserProfilePage").then(m => ({ default: m.UserProfilePage })));
 const BillingPage = React.lazy(() => import("../billing/BillingPage").then(m => ({ default: m.BillingPage })));
 const HelpCenterPage = React.lazy(() => import("../support/HelpCenterPage").then(m => ({ default: m.HelpCenterPage })));
 const OnboardingFlow = React.lazy(() => import("../onboarding/OnboardingFlow").then(m => ({ default: m.OnboardingFlow })));
 const APIDocumentationPage = React.lazy(() => import("../api/APIDocumentationPage").then(m => ({ default: m.APIDocumentationPage })));
+
+// New comprehensive pages
+const TeamDashboard = React.lazy(() => import("../team/TeamDashboard").then(m => ({ default: m.TeamDashboard })));
+const NotificationCenter = React.lazy(() => import("../notifications/NotificationCenter").then(m => ({ default: m.NotificationCenter })));
+const ActivityFeed = React.lazy(() => import("../activity/ActivityFeed").then(m => ({ default: m.ActivityFeed })));
+const IntegrationsHub = React.lazy(() => import("../integrations/IntegrationsHub").then(m => ({ default: m.IntegrationsHub })));
+const ReportsCenter = React.lazy(() => import("../reports/ReportsCenter").then(m => ({ default: m.ReportsCenter })));
+const AdvancedSettings = React.lazy(() => import("../settings/AdvancedSettings").then(m => ({ default: m.AdvancedSettings })));
+
+// Mobile components
+const ResponsiveDashboard = React.lazy(() => import("../mobile/ResponsiveDashboard").then(m => ({ default: m.ResponsiveDashboard })));
+const MobileCustomerForm = React.lazy(() => import("../forms/MobileCustomerForm").then(m => ({ default: m.MobileCustomerForm })));
 
 // Placeholder components for sections that need implementation
 const PlaceholderSection = ({ sectionName }: { sectionName: string }) => (
@@ -50,11 +62,12 @@ export const createSectionRegistry = () => {
 
   return {
     // Core sections
-    'home': <Dashboard />,
+    'home': <ResponsiveDashboard onSectionChange={(section) => console.log('Navigate to', section)} />,
     'dashboard': <Dashboard />,
     
     // Customer Management
     'customers': <CustomerList />,
+    'customer-form': <MobileCustomerForm />,
     'pipeline': <PlaceholderSection sectionName="Sales Pipeline" />,
     'communication': <PlaceholderSection sectionName="Communication" />,
     'reviews': <PlaceholderSection sectionName="Review Management" />,
@@ -71,15 +84,18 @@ export const createSectionRegistry = () => {
     'estimates': <PlaceholderSection sectionName="Estimates" />,
     'invoices': <InvoiceList />,
     'expenses': <ExpenseList />,
-    'goals': <PlaceholderSection sectionName="KPI Dashboard" />,
+    'goals': <ReportsCenter />,
     'profit-analysis': <PlaceholderSection sectionName="Profit Analysis" />,
     'tax-financial': <PlaceholderSection sectionName="Tax & Financial" />,
     
     // Team & Resources
-    'team-management': <PlaceholderSection sectionName="Team Management" />,
+    'team-management': <TeamDashboard />,
     'inventory': <PlaceholderSection sectionName="Inventory" />,
     'equipment': <PlaceholderSection sectionName="Equipment Tracking" />,
     'vehicles': <PlaceholderSection sectionName="Vehicle Management" />,
+    
+    // Advanced Features
+    'client-appointment': <PlaceholderSection sectionName="Client Appointments" />,
     
     // Management
     'branch-management': <PlaceholderSection sectionName="Multi-Branch Management" />,
@@ -95,13 +111,19 @@ export const createSectionRegistry = () => {
     'api-docs': <APIDocumentationPage />,
     
     // Admin sections
-    'admin-panel': <PlaceholderSection sectionName="Admin Panel" />,
-    'user-management': <PlaceholderSection sectionName="User Management" />,
-    'system-settings': <PlaceholderSection sectionName="System Settings" />,
+    'admin-panel': <AdvancedSettings />,
+    'user-management': <TeamDashboard />,
+    'system-settings': <AdvancedSettings />,
     
-    // Tools
-    'notifications': <PlaceholderSection sectionName="Notifications" />,
-    'back-office': <PlaceholderSection sectionName="Settings" />,
-    'map-view': <MapView jobs={transformedJobs} />
+    // Tools & Features
+    'notifications': <NotificationCenter />,
+    'activity-feed': <ActivityFeed />,
+    'integrations': <IntegrationsHub />,
+    'reports': <ReportsCenter />,
+    'back-office': <AdvancedSettings />,
+    'map-view': <MapView jobs={transformedJobs} />,
+    
+    // Auth & Recovery
+    'password-recovery': <PasswordRecoveryPage />
   };
 };
