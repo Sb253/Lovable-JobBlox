@@ -30,7 +30,6 @@ export const OptimizedUnifiedSidebar = memo(({
     isCollapsed,
     searchTerm,
     openGroups,
-    companyData,
     toggleCollapse,
     toggleGroup,
     handleSearchChange,
@@ -79,7 +78,6 @@ export const OptimizedUnifiedSidebar = memo(({
       )}
     >
       <SidebarHeader 
-        companyData={companyData}
         isCollapsed={isCollapsed}
         onToggleCollapse={toggleCollapse}
       />

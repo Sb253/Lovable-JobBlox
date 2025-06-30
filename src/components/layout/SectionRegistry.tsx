@@ -1,3 +1,4 @@
+
 import React from 'react';
 
 // Lazy load all components for better performance
@@ -47,6 +48,9 @@ const MobileCustomerForm = React.lazy(() => import("../forms/MobileCustomerForm"
 const PipelineManagement = React.lazy(() => import("../advanced/PipelineManagement").then(m => ({ default: m.PipelineManagement })));
 const CommunicationHub = React.lazy(() => import("../communication/CommunicationHub").then(m => ({ default: m.CommunicationHub })));
 const PhotoManagement = React.lazy(() => import("../photos/PhotoManagement").then(m => ({ default: m.PhotoManagement })));
+
+// Company Settings
+const CompanySettings = React.lazy(() => import("../CompanySettings").then(m => ({ default: m.CompanySettings })));
 
 // Placeholder components for sections that need implementation
 const PlaceholderSection = ({ sectionName }: { sectionName: string }) => (
@@ -146,7 +150,46 @@ export const createSectionRegistry = () => {
     'security-center': <SecurityCenter />,
     'map-view': <MapView jobs={transformedJobs} />,
     
+    // Settings
+    'settings': <AdvancedSettings />,
+    'company-settings': <CompanySettings />,
+    'security': <SecurityCenter />,
+    
     // Auth & Recovery
     'password-recovery': <PasswordRecoveryPage />
   };
+};
+
+interface SectionRegistryProps {
+  activeSection: string;
+  onSectionChange: (section: string) => void;
+}
+
+export const SectionRegistry: React.FC<SectionRegistryProps> = ({ activeSection, onSectionChange }) => {
+  const sectionRegistry = createSectionRegistry();
+  const component = sectionRegistry[activeSection as keyof typeof sectionRegistry];
+  
+  if (component) {
+    return (
+      <React.Suspense fallback={
+        <div className="flex items-center justify-center min-h-96">
+          <div className="text-center">
+            <div className="animate-spin rounded-full h-8 w-8 border-b-2 border-primary mx-auto mb-4"></div>
+            <p className="text-muted-foreground">Loading...</p>
+          </div>
+        </div>
+      }>
+        {component}
+      </React.Suspense>
+    );
+  }
+  
+  return (
+    <div className="p-6">
+      <div className="text-center text-muted-foreground">
+        <h2 className="text-2xl font-semibold mb-2">Section Not Found</h2>
+        <p>The section "{activeSection}" could not be found.</p>
+      </div>
+    </div>
+  );
 };
