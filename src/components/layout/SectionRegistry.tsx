@@ -67,7 +67,10 @@ export const createSectionRegistry = () => {
     
     // Customer Management
     'customers': <CustomerList />,
-    'customer-form': <MobileCustomerForm />,
+    'customer-form': <MobileCustomerForm 
+      onBack={() => console.log('Navigate back')} 
+      onSave={(customer) => console.log('Save customer:', customer)} 
+    />,
     'pipeline': <PlaceholderSection sectionName="Sales Pipeline" />,
     'communication': <PlaceholderSection sectionName="Communication" />,
     'reviews': <PlaceholderSection sectionName="Review Management" />,
