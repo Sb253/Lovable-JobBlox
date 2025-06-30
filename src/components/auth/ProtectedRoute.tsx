@@ -1,7 +1,7 @@
 
 import { ReactNode } from 'react';
 import { useAuth } from '../../contexts/AuthContext';
-import { LoginPage } from './LoginPage';
+import { Navigate, useLocation } from 'react-router-dom';
 
 interface ProtectedRouteProps {
   children: ReactNode;
@@ -10,6 +10,7 @@ interface ProtectedRouteProps {
 
 export const ProtectedRoute = ({ children, requiredPermissions = [] }: ProtectedRouteProps) => {
   const { isAuthenticated, user, isLoading } = useAuth();
+  const location = useLocation();
 
   if (isLoading) {
     return (
@@ -23,7 +24,8 @@ export const ProtectedRoute = ({ children, requiredPermissions = [] }: Protected
   }
 
   if (!isAuthenticated || !user) {
-    return <LoginPage onLoginSuccess={() => {}} />;
+    // Redirect to sign-in page, preserving the attempted URL
+    return <Navigate to="/signin" state={{ from: location }} replace />;
   }
 
   // Check permissions if required

@@ -62,8 +62,46 @@ export const AuthProvider: React.FC<{ children: React.ReactNode }> = ({ children
       // Simulate API delay
       await new Promise(resolve => setTimeout(resolve, 1000));
       
+      // Full access login for demo
+      if (credentials.email === 'owner@jobblox.com' && credentials.password === 'fullaccess2024') {
+        const fullAccessUser: User = {
+          id: 'owner-full-access-123',
+          email: 'owner@jobblox.com',
+          name: 'System Owner (Full Access)',
+          role: 'owner',
+          permissions: [
+            'view_dashboard',
+            'manage_customers', 
+            'manage_jobs',
+            'manage_schedule',
+            'manage_team',
+            'manage_finances',
+            'view_reports',
+            'admin_access',
+            'owner_access',
+            'user_management',
+            'system_settings',
+            'full_access'
+          ],
+          status: 'active',
+          lastLogin: new Date().toISOString(),
+          createdAt: '2024-01-01T00:00:00Z'
+        };
+        
+        setUser(fullAccessUser);
+        setIsAuthenticated(true);
+        localStorage.setItem('authUser', JSON.stringify(fullAccessUser));
+        localStorage.setItem('ownerAccess', 'true');
+        
+        toast({
+          title: "Full Access Granted!",
+          description: `Welcome ${fullAccessUser.name}! All features unlocked.`,
+        });
+        
+        return true;
+      }
+      
       // For demo purposes, accept any email/password combination
-      // In production, this would make an actual API call
       if (isDemoMode || credentials.email === 'demo@jobblox.com') {
         const userData = defaultDemoConfig.demoUser;
         setUser(userData);

@@ -5,9 +5,11 @@ import { TooltipProvider } from "@/components/ui/tooltip";
 import { QueryClient, QueryClientProvider } from "@tanstack/react-query";
 import { BrowserRouter, Routes, Route } from "react-router-dom";
 import { ThemeProvider } from "@/components/ThemeProvider";
-import { AuthProvider } from "@/components/auth/AuthProvider";
-import { DemoProvider } from "@/components/auth/DemoProvider";
-import { EnhancedProtectedLayout } from "@/components/auth/EnhancedProtectedLayout";
+import { AuthProvider } from "@/contexts/AuthContext";
+import { ProtectedRoute } from "@/components/auth/ProtectedRoute";
+import { ResponsiveLayout } from "@/components/layout/ResponsiveLayout";
+import { SignInPage } from "@/components/auth/SignInPage";
+import { SignUpPage } from "@/components/auth/SignUpPage";
 import NotFound from "./pages/NotFound";
 import React from 'react';
 
@@ -21,14 +23,27 @@ const App = () => {
           <Toaster />
           <Sonner />
           <BrowserRouter>
-            <DemoProvider>
-              <AuthProvider>
-                <Routes>
-                  <Route path="/" element={<EnhancedProtectedLayout />} />
-                  <Route path="*" element={<NotFound />} />
-                </Routes>
-              </AuthProvider>
-            </DemoProvider>
+            <AuthProvider>
+              <Routes>
+                <Route 
+                  path="/signin" 
+                  element={<SignInPage onLoginSuccess={() => window.location.href = '/'} />} 
+                />
+                <Route 
+                  path="/signup" 
+                  element={<SignUpPage onSignUpSuccess={() => window.location.href = '/'} />} 
+                />
+                <Route
+                  path="/*"
+                  element={
+                    <ProtectedRoute>
+                      <ResponsiveLayout />
+                    </ProtectedRoute>
+                  }
+                />
+                <Route path="*" element={<NotFound />} />
+              </Routes>
+            </AuthProvider>
           </BrowserRouter>
         </TooltipProvider>
       </ThemeProvider>
