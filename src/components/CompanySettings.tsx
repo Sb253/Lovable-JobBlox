@@ -4,25 +4,27 @@ import { Card, CardContent, CardHeader, CardTitle } from "@/components/ui/card";
 import { Button } from "@/components/ui/button";
 import { Input } from "@/components/ui/input";
 import { Label } from "@/components/ui/label";
-import { Textarea } from "@/components/ui/textarea";
 import { Switch } from "@/components/ui/switch";
-import { Upload, Building2, Save, Palette } from "lucide-react";
+import { Upload, Building2, Save, Palette, Info } from "lucide-react";
 import { useToast } from "@/hooks/use-toast";
+import { getAppName, getCurrentTenant, DEFAULT_TENANT_CONFIG } from '../config/tenant';
 
 export const CompanySettings = () => {
   const { toast } = useToast();
-  const [companyData, setCompanyData] = useState({
-    name: 'Your Construction Company',
-    address: '123 Business Street',
-    city: 'City, State 12345',
-    phone: '(555) 123-4567',
-    email: 'info@yourcompany.com',
-    website: 'www.yourcompany.com',
-    logo: null as string | null,
-    // Header customization options
-    displayInHeader: true,
-    headerCompanyName: 'JobBlox',
-    useCustomHeaderName: false
+  const appName = getAppName(); // Always "JobBlox"
+  
+  const [companyData, setCompanyData] = useState(() => {
+    const tenant = getCurrentTenant();
+    return {
+      name: tenant.companyName,
+      address: tenant.contactInfo.address,
+      phone: tenant.contactInfo.phone,
+      email: tenant.contactInfo.email,
+      website: tenant.contactInfo.website,
+      logo: tenant.companyLogo || null,
+      primaryColor: tenant.primaryColor,
+      secondaryColor: tenant.secondaryColor,
+    };
   });
 
   useEffect(() => {
@@ -30,7 +32,11 @@ export const CompanySettings = () => {
     if (savedSettings) {
       try {
         const data = JSON.parse(savedSettings);
-        setCompanyData(prev => ({ ...prev, ...data }));
+        setCompanyData(prev => ({ 
+          ...prev, 
+          ...data,
+          companyName: data.companyName || data.name || prev.name
+        }));
       } catch (error) {
         console.error('Error loading company settings:', error);
       }
@@ -50,8 +56,15 @@ export const CompanySettings = () => {
 
   const handleSave = () => {
     const settingsToSave = {
-      ...companyData,
-      companyName: companyData.name // Ensure compatibility
+      companyName: companyData.name,
+      name: companyData.name, // For backwards compatibility
+      businessAddress: companyData.address,
+      phone: companyData.phone,
+      email: companyData.email,
+      website: companyData.website,
+      logo: companyData.logo,
+      primaryColor: companyData.primaryColor,
+      secondaryColor: companyData.secondaryColor,
     };
     
     localStorage.setItem('companySettings', JSON.stringify(settingsToSave));
@@ -71,6 +84,21 @@ export const CompanySettings = () => {
         <Building2 className="h-6 w-6" />
         <h2 className="text-2xl font-bold">Company Settings</h2>
       </div>
+
+      {/* Info Banner */}
+      <Card className="bg-blue-50 border-blue-200">
+        <CardContent className="p-4">
+          <div className="flex items-start gap-3">
+            <Info className="h-5 w-5 text-blue-600 mt-0.5" />
+            <div>
+              <h3 className="font-medium text-blue-900">Single-Tenant Mode</h3>
+              <p className="text-sm text-blue-800 mt-1">
+                The platform name "{appName}" is locked system-wide. You can customize your company information below to brand the platform for your organization.
+              </p>
+            </div>
+          </div>
+        </CardContent>
+      </Card>
 
       <div className="grid grid-cols-1 lg:grid-cols-2 gap-6">
         {/* Company Logo */}
@@ -98,75 +126,64 @@ export const CompanySettings = () => {
           </CardContent>
         </Card>
 
-        {/* Header Customization */}
+        {/* Branding Colors */}
         <Card>
           <CardHeader>
             <CardTitle className="flex items-center gap-2">
               <Palette className="h-5 w-5" />
-              Header Customization
+              Brand Colors
             </CardTitle>
           </CardHeader>
           <CardContent className="space-y-4">
-            <div className="flex items-center justify-between">
-              <div className="space-y-1">
-                <Label htmlFor="displayInHeader">Display in Header</Label>
-                <p className="text-xs text-muted-foreground">
-                  Show company branding in the application header
-                </p>
-              </div>
-              <Switch
-                id="displayInHeader"
-                checked={companyData.displayInHeader}
-                onCheckedChange={(checked) => 
-                  setCompanyData(prev => ({ ...prev, displayInHeader: checked }))
-                }
-              />
-            </div>
-
-            {companyData.displayInHeader && (
-              <>
-                <div className="flex items-center justify-between">
-                  <div className="space-y-1">
-                    <Label htmlFor="useCustomHeaderName">Use Custom Header Name</Label>
-                    <p className="text-xs text-muted-foreground">
-                      Override default "JobBlox" branding
-                    </p>
-                  </div>
-                  <Switch
-                    id="useCustomHeaderName"
-                    checked={companyData.useCustomHeaderName}
-                    onCheckedChange={(checked) => 
-                      setCompanyData(prev => ({ ...prev, useCustomHeaderName: checked }))
-                    }
+            <div className="space-y-4">
+              <div className="space-y-2">
+                <Label htmlFor="primaryColor">Primary Color</Label>
+                <div className="flex gap-2">
+                  <Input
+                    id="primaryColor"
+                    type="color"
+                    value={companyData.primaryColor}
+                    onChange={(e) => setCompanyData(prev => ({ 
+                      ...prev, 
+                      primaryColor: e.target.value 
+                    }))}
+                    className="w-16 h-10"
+                  />
+                  <Input
+                    value={companyData.primaryColor}
+                    onChange={(e) => setCompanyData(prev => ({ 
+                      ...prev, 
+                      primaryColor: e.target.value 
+                    }))}
+                    className="flex-1"
                   />
                 </div>
+              </div>
 
-                {companyData.useCustomHeaderName && (
-                  <div className="space-y-2">
-                    <Label htmlFor="headerCompanyName">Header Company Name</Label>
-                    <Input
-                      id="headerCompanyName"
-                      value={companyData.headerCompanyName}
-                      onChange={(e) => setCompanyData(prev => ({ 
-                        ...prev, 
-                        headerCompanyName: e.target.value 
-                      }))}
-                      placeholder="Enter name to display in header"
-                    />
-                  </div>
-                )}
-
-                <div className="p-3 bg-blue-50 dark:bg-blue-950 rounded-lg">
-                  <p className="text-sm text-blue-800 dark:text-blue-200">
-                    <strong>Preview:</strong> Header will show{' '}
-                    {companyData.useCustomHeaderName 
-                      ? `"${companyData.headerCompanyName || 'Company Name'}"` 
-                      : '"JobBlox"'
-                    } with gradient styling
-                  </p>
+              <div className="space-y-2">
+                <Label htmlFor="secondaryColor">Secondary Color</Label>
+                <div className="flex gap-2">
+                  <Input
+                    id="secondaryColor"
+                    type="color"
+                    value={companyData.secondaryColor}
+                    onChange={(e) => setCompanyData(prev => ({ 
+                      ...prev, 
+                      secondaryColor: e.target.value 
+                    }))}
+                    className="w-16 h-10"
+                  />
+                  <Input
+                    value={companyData.secondaryColor}
+                    onChange={(e) => setCompanyData(prev => ({ 
+                      ...prev, 
+                      secondaryColor: e.target.value 
+                    }))}
+                    className="flex-1"
+                  />
                 </div>
-              </>
-            )}
+              </div>
+            </div>
           </CardContent>
         </Card>
       </div>
@@ -184,6 +201,7 @@ export const CompanySettings = () => {
                 id="companyName"
                 value={companyData.name}
                 onChange={(e) => setCompanyData(prev => ({ ...prev, name: e.target.value }))}
+                placeholder="Peak Pros Roofing & Construction"
               />
             </div>
 
@@ -193,25 +211,18 @@ export const CompanySettings = () => {
                 id="website"
                 value={companyData.website}
                 onChange={(e) => setCompanyData(prev => ({ ...prev, website: e.target.value }))}
+                placeholder="www.peakprosroofing.com"
               />
             </div>
           </div>
 
           <div className="space-y-2">
-            <Label htmlFor="address">Address</Label>
+            <Label htmlFor="address">Business Address</Label>
             <Input
               id="address"
               value={companyData.address}
               onChange={(e) => setCompanyData(prev => ({ ...prev, address: e.target.value }))}
-            />
-          </div>
-
-          <div className="space-y-2">
-            <Label htmlFor="city">City, State, ZIP</Label>
-            <Input
-              id="city"
-              value={companyData.city}
-              onChange={(e) => setCompanyData(prev => ({ ...prev, city: e.target.value }))}
+              placeholder="123 Construction Ave, City, State 12345"
             />
           </div>
 
@@ -222,6 +233,7 @@ export const CompanySettings = () => {
                 id="phone"
                 value={companyData.phone}
                 onChange={(e) => setCompanyData(prev => ({ ...prev, phone: e.target.value }))}
+                placeholder="(555) 123-4567"
               />
             </div>
 
@@ -231,6 +243,7 @@ export const CompanySettings = () => {
                 id="email"
                 value={companyData.email}
                 onChange={(e) => setCompanyData(prev => ({ ...prev, email: e.target.value }))}
+                placeholder="info@peakprosroofing.com"
               />
             </div>
           </div>

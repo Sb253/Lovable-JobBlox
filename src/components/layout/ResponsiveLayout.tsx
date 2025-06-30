@@ -1,128 +1,125 @@
-import React, { useState, useEffect } from 'react';
-import { AppHeader } from "../AppHeader";
-import { UnifiedSidebar } from "../UnifiedSidebar";
-import { SectionRenderer } from "./SectionRenderer";
-import { sections, Section } from "./SectionTypes";
-import { OwnerAccess } from "../admin/OwnerAccess";
-import { useAuth } from "../../contexts/AuthContext";
 
-// Convert Section to SidebarSection format
-const mapSectionsToSidebarSections = (sections: Section[]) => {
-  return sections.map(section => ({
-    id: section.id,
-    label: section.title, // Map title to label
-    icon: section.icon
-  }));
-};
+import React, { useState, useEffect } from 'react';
+import { AppHeader } from '../AppHeader';
+import { UnifiedSidebar } from '../UnifiedSidebar';
+import { SectionRegistry } from './SectionRegistry';
+import { 
+  BarChart3, 
+  Users, 
+  Briefcase, 
+  Calendar,
+  MapPin,
+  FileText,
+  Calculator,
+  DollarSign,
+  Settings,
+  Bell,
+  User,
+  Shield,
+  Camera,
+  Clock,
+  Truck,
+  Hammer,
+  Package,
+  Target,
+  MessageSquare,
+  CheckSquare,
+  AlertTriangle,
+  TrendingUp,
+  Building2,
+  UserPlus,
+  Globe
+} from "lucide-react";
 
 export const ResponsiveLayout = () => {
-  const { user } = useAuth();
-  const [activeSection, setActiveSection] = useState('home');
-  const [sidebarWidth, setSidebarWidth] = useState(256);
-  const [needsOwnerAccess, setNeedsOwnerAccess] = useState(false);
-  const [hasOwnerAccess, setHasOwnerAccess] = useState(false);
+  const [activeSection, setActiveSection] = useState('dashboard');
+  const [sidebarVisible, setSidebarVisible] = useState(true);
+  const [isMobile, setIsMobile] = useState(false);
 
-  // Convert sections for sidebar
-  const sidebarSections = mapSectionsToSidebarSections(sections);
-
+  // Check for mobile screen size
   useEffect(() => {
-    // Load saved active section
-    const savedSection = localStorage.getItem('activeSection');
-    if (savedSection && sections.find(s => s.id === savedSection)) {
-      setActiveSection(savedSection);
-    }
-
-    // Check if user needs owner access for admin functions
-    const ownerAccess = localStorage.getItem('ownerAccess') === 'true';
-    setHasOwnerAccess(ownerAccess);
-
-    // Listen for sidebar width changes
-    const handleSidebarToggle = () => {
-      const isCollapsed = JSON.parse(localStorage.getItem('sidebarCollapsed') || 'false');
-      setSidebarWidth(isCollapsed ? 64 : 256);
+    const checkMobile = () => {
+      setIsMobile(window.innerWidth < 768);
     };
-
-    handleSidebarToggle();
-    window.addEventListener('storage', handleSidebarToggle);
-    window.addEventListener('sidebarToggle', handleSidebarToggle);
-
-    return () => {
-      window.removeEventListener('storage', handleSidebarToggle);
-      window.removeEventListener('sidebarToggle', handleSidebarToggle);
-    };
-  }, []);
-
-  useEffect(() => {
-    if (activeSection) {
-      localStorage.setItem('activeSection', activeSection);
-    }
-  }, [activeSection]);
-
-  const handleSectionChange = (section: string) => {
-    // Check if section requires owner access
-    const adminSections = ['admin-panel', 'user-management', 'system-settings'];
     
-    if (adminSections.includes(section) && !hasOwnerAccess) {
-      setNeedsOwnerAccess(true);
-      return;
-    }
-
-    setActiveSection(section);
-    const newUrl = section === 'home' ? '/' : `/${section}`;
-    window.history.pushState({ section }, '', newUrl);
-  };
-
-  const handleOwnerAccessGranted = () => {
-    localStorage.setItem('ownerAccess', 'true');
-    setHasOwnerAccess(true);
-    setNeedsOwnerAccess(false);
-    setActiveSection('admin-panel');
-  };
-
-  // Handle browser navigation
-  useEffect(() => {
-    const handlePopState = (event: PopStateEvent) => {
-      const path = window.location.pathname;
-      if (path === '/') {
-        setActiveSection('home');
-      } else {
-        const section = path.slice(1);
-        if (sections.find(s => s.id === section)) {
-          setActiveSection(section);
-        }
-      }
-    };
-
-    window.addEventListener('popstate', handlePopState);
-    return () => window.removeEventListener('popstate', handlePopState);
+    checkMobile();
+    window.addEventListener('resize', checkMobile);
+    return () => window.removeEventListener('resize', checkMobile);
   }, []);
 
-  if (needsOwnerAccess) {
-    return (
-      <OwnerAccess 
-        onAccessGranted={handleOwnerAccessGranted}
-      />
-    );
-  }
+  const sections = [
+    // Dashboard & Analytics
+    { id: 'dashboard', label: 'Dashboard', icon: BarChart3 },
+    { id: 'widgets', label: 'Widgets', icon: BarChart3 },
+    { id: 'analytics', label: 'Analytics', icon: TrendingUp },
+    { id: 'reports', label: 'Reports', icon: FileText },
+    
+    // Customer Management
+    { id: 'customers', label: 'Customers', icon: Users },
+    { id: 'customer-form', label: 'Add Customer', icon: UserPlus },
+    { id: 'pipeline', label: 'Sales Pipeline', icon: Target },
+    { id: 'communication', label: 'Communication Hub', icon: MessageSquare },
+    { id: 'reviews', label: 'Reviews & Feedback', icon: MessageSquare },
+    
+    // Job Management
+    { id: 'jobs', label: 'Jobs', icon: Briefcase },
+    { id: 'job-form', label: 'Create Job', icon: Briefcase },
+    { id: 'schedule', label: 'Schedule', icon: Calendar },
+    { id: 'time-tracking', label: 'Time Tracking', icon: Clock },
+    { id: 'photos', label: 'Photo Management', icon: Camera },
+    { id: 'safety', label: 'Safety Management', icon: AlertTriangle },
+    { id: 'quality', label: 'Quality Control', icon: CheckSquare },
+    
+    // Team & Resources
+    { id: 'team-management', label: 'Team Management', icon: Users },
+    { id: 'subcontractor-management', label: 'Subcontractors', icon: Hammer },
+    { id: 'inventory', label: 'Inventory', icon: Package },
+    { id: 'equipment', label: 'Equipment', icon: Hammer },
+    { id: 'vehicles', label: 'Vehicles', icon: Truck },
+    
+    // Financial
+    { id: 'estimates', label: 'Estimates', icon: Calculator },
+    { id: 'invoices', label: 'Invoices', icon: FileText },
+    { id: 'expenses', label: 'Expenses', icon: DollarSign },
+    { id: 'goals', label: 'Financial Goals', icon: Target },
+    
+    // Operations
+    { id: 'map-view', label: 'Map View', icon: MapPin },
+    
+    // System & Settings
+    { id: 'notifications', label: 'Notifications', icon: Bell },
+    { id: 'profile', label: 'Profile', icon: User },
+    { id: 'company-settings', label: 'Company Settings', icon: Building2 },
+    { id: 'settings', label: 'System Settings', icon: Settings },
+    { id: 'security', label: 'Security', icon: Shield },
+    { id: 'integrations', label: 'Integrations', icon: Globe }
+  ];
 
   return (
-    <div className="min-h-screen bg-background flex flex-col">
-      <AppHeader onSectionChange={handleSectionChange} />
+    <div className="min-h-screen bg-background">
+      <AppHeader 
+        onSectionChange={setActiveSection}
+        onMobileSidebarToggle={() => setSidebarVisible(!sidebarVisible)}
+        isMobile={isMobile}
+      />
       
-      <div className="flex flex-1">
+      <div className="flex pt-16">
         <UnifiedSidebar
           activeSection={activeSection}
-          onSectionChange={handleSectionChange}
-          sections={sidebarSections}
-          isVisible={true}
-          hasOwnerAccess={hasOwnerAccess}
+          onSectionChange={setActiveSection}
+          sections={sections}
+          isVisible={isMobile ? sidebarVisible : true}
         />
-
-        <main 
-          className="flex-1 transition-all duration-300 pt-16" 
-          style={{ marginLeft: `${sidebarWidth}px` }}
-        >
-          <SectionRenderer activeSection={activeSection} />
+        
+        <main className={`flex-1 transition-all duration-300 ${
+          isMobile 
+            ? (sidebarVisible ? 'ml-0' : 'ml-0') 
+            : (sidebarVisible ? 'ml-64' : 'ml-16')
+        } p-6`}>
+          <SectionRegistry 
+            activeSection={activeSection} 
+            onSectionChange={setActiveSection}
+          />
         </main>
       </div>
     </div>

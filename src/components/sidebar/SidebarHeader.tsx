@@ -1,47 +1,66 @@
 
-import React from 'react';
+import React, { useState, useEffect } from 'react';
 import { Button } from "@/components/ui/button";
 import { Building2, Menu, X } from "lucide-react";
-
-interface CompanyData {
-  name: string;
-  logo: string | null;
-  displayInHeader: boolean;
-  useCustomHeaderName: boolean;
-  headerCompanyName: string;
-}
+import { getAppName, getCurrentTenant } from '../../config/tenant';
 
 interface SidebarHeaderProps {
-  companyData: CompanyData;
   isCollapsed: boolean;
   onToggleCollapse: () => void;
 }
 
 export const SidebarHeader: React.FC<SidebarHeaderProps> = ({
-  companyData,
   isCollapsed,
   onToggleCollapse
 }) => {
-  const displayName = companyData.useCustomHeaderName 
-    ? companyData.headerCompanyName 
-    : companyData.name;
+  const [tenant, setTenant] = useState(getCurrentTenant());
+  const appName = getAppName(); // Always "JobBlox"
+
+  useEffect(() => {
+    // Listen for company settings changes
+    const handleStorageChange = (e: StorageEvent) => {
+      if (e.key === 'companySettings') {
+        setTenant(getCurrentTenant());
+      }
+    };
+
+    // Listen for custom storage events
+    const handleCustomStorageChange = () => {
+      setTenant(getCurrentTenant());
+    };
+
+    window.addEventListener('storage', handleStorageChange);
+    window.addEventListener('storage', handleCustomStorageChange);
+    
+    return () => {
+      window.removeEventListener('storage', handleStorageChange);
+      window.removeEventListener('storage', handleCustomStorageChange);
+    };
+  }, []);
 
   return (
     <div className="flex items-center justify-between p-4 border-b border-border/40">
       {!isCollapsed && (
         <div className="flex items-center gap-3 flex-1 min-w-0">
-          {companyData.logo ? (
+          {tenant.companyLogo ? (
             <img 
-              src={companyData.logo} 
-              alt="Company Logo" 
+              src={tenant.companyLogo} 
+              alt={`${tenant.companyName} Logo`} 
               className="h-8 w-8 object-contain flex-shrink-0"
             />
           ) : (
             <Building2 className="h-8 w-8 text-primary flex-shrink-0" />
           )}
-          <h1 className="text-lg font-bold bg-gradient-to-r from-blue-600 to-purple-600 bg-clip-text text-transparent truncate">
-            {displayName}
-          </h1>
+          <div className="flex flex-col min-w-0">
+            <h1 className="text-lg font-bold bg-gradient-to-r from-blue-600 to-purple-600 bg-clip-text text-transparent truncate">
+              {appName}
+            </h1>
+            {tenant.companyName !== appName && (
+              <span className="text-xs text-muted-foreground truncate">
+                {tenant.companyName}
+              </span>
+            )}
+          </div>
         </div>
       )}
       <Button

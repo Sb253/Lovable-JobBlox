@@ -7,7 +7,6 @@ import { SidebarSearch } from "./sidebar/SidebarSearch";
 import { SidebarDashboard } from "./sidebar/SidebarDashboard";
 import { SidebarNavigation } from "./sidebar/SidebarNavigation";
 import { useSidebarState } from "../hooks/useSidebarState";
-import { useCompanyDataSidebar } from "../hooks/useCompanyDataSidebar";
 import { createMenuGroups, SidebarSection } from "./sidebar/config/menuGroupsConfig";
 
 interface UnifiedSidebarProps {
@@ -25,7 +24,6 @@ export const UnifiedSidebar = ({
   isVisible = true,
   hasOwnerAccess = false
 }: UnifiedSidebarProps) => {
-  const companyData = useCompanyDataSidebar();
   const {
     isCollapsed,
     searchTerm,
@@ -77,7 +75,6 @@ export const UnifiedSidebar = ({
       )}
     >
       <SidebarHeader 
-        companyData={companyData}
         isCollapsed={isCollapsed}
         onToggleCollapse={toggleCollapse}
       />

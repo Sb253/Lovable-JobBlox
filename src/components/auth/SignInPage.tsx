@@ -8,6 +8,7 @@ import { Building2, Eye, EyeOff, Zap, Mail, Lock } from "lucide-react";
 import { useAuth } from '../../contexts/AuthContext';
 import { LoginCredentials } from '../../types/auth';
 import { Link } from 'react-router-dom';
+import { getAppName } from '../../config/tenant';
 
 interface SignInPageProps {
   onLoginSuccess: () => void;
@@ -21,6 +22,8 @@ export const SignInPage = ({ onLoginSuccess }: SignInPageProps) => {
   });
   const [showPassword, setShowPassword] = useState(false);
   const [errors, setErrors] = useState<Partial<LoginCredentials>>({});
+  
+  const appName = getAppName(); // Always "JobBlox"
 
   const validateForm = () => {
     const newErrors: Partial<LoginCredentials> = {};
@@ -75,10 +78,14 @@ export const SignInPage = ({ onLoginSuccess }: SignInPageProps) => {
       <Card className="w-full max-w-md">
         <CardHeader className="text-center">
           <div className="flex justify-center mb-4">
-            <Building2 className="h-12 w-12 text-primary" />
+            <div className="w-12 h-12 bg-gradient-to-br from-blue-600 to-purple-600 rounded-lg flex items-center justify-center">
+              <Zap className="h-7 w-7 text-white" />
+            </div>
           </div>
-          <CardTitle className="text-2xl font-bold">Welcome Back</CardTitle>
-          <p className="text-muted-foreground">Sign in to your JobBlox account</p>
+          <CardTitle className="text-2xl font-bold bg-gradient-to-r from-blue-600 to-purple-600 bg-clip-text text-transparent">
+            {appName}
+          </CardTitle>
+          <p className="text-muted-foreground">Sign in to your account</p>
         </CardHeader>
         
         <CardContent>
@@ -171,11 +178,6 @@ export const SignInPage = ({ onLoginSuccess }: SignInPageProps) => {
               Don't have an account?{' '}
               <Link to="/signup" className="text-blue-600 hover:underline font-medium">
                 Sign up here
-              </Link>
-            </p>
-            <p className="text-xs text-muted-foreground">
-              <Link to="/password-recovery" className="text-blue-600 hover:underline">
-                Forgot your password?
               </Link>
             </p>
           </div>
