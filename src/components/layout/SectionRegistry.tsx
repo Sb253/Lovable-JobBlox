@@ -1,4 +1,3 @@
-
 import React from 'react';
 
 // Lazy load all components for better performance
@@ -24,10 +23,30 @@ const ActivityFeed = React.lazy(() => import("../activity/ActivityFeed").then(m 
 const IntegrationsHub = React.lazy(() => import("../integrations/IntegrationsHub").then(m => ({ default: m.IntegrationsHub })));
 const ReportsCenter = React.lazy(() => import("../reports/ReportsCenter").then(m => ({ default: m.ReportsCenter })));
 const AdvancedSettings = React.lazy(() => import("../settings/AdvancedSettings").then(m => ({ default: m.AdvancedSettings })));
+const SecurityCenter = React.lazy(() => import("../settings/SecurityCenter").then(m => ({ default: m.SecurityCenter })));
+
+// Operations pages
+const ScheduleView = React.lazy(() => import("../operations/ScheduleView").then(m => ({ default: m.ScheduleView })));
+const TimeTracking = React.lazy(() => import("../operations/TimeTracking").then(m => ({ default: m.TimeTracking })));
+const EstimateList = React.lazy(() => import("../operations/EstimateList").then(m => ({ default: m.EstimateList })));
+
+// Management pages
+const SafetyManagement = React.lazy(() => import("../management/SafetyManagement").then(m => ({ default: m.SafetyManagement })));
+const QualityControl = React.lazy(() => import("../management/QualityControl").then(m => ({ default: m.QualityControl })));
+
+// Resources pages
+const InventoryManagement = React.lazy(() => import("../resources/InventoryManagement").then(m => ({ default: m.InventoryManagement })));
+const EquipmentManagement = React.lazy(() => import("../resources/EquipmentManagement").then(m => ({ default: m.EquipmentManagement })));
+const VehicleManagement = React.lazy(() => import("../resources/VehicleManagement").then(m => ({ default: m.VehicleManagement })));
 
 // Mobile components
 const ResponsiveDashboard = React.lazy(() => import("../mobile/ResponsiveDashboard").then(m => ({ default: m.ResponsiveDashboard })));
 const MobileCustomerForm = React.lazy(() => import("../forms/MobileCustomerForm").then(m => ({ default: m.MobileCustomerForm })));
+
+// Additional advanced components
+const PipelineManagement = React.lazy(() => import("../advanced/PipelineManagement").then(m => ({ default: m.PipelineManagement })));
+const CommunicationHub = React.lazy(() => import("../communication/CommunicationHub").then(m => ({ default: m.CommunicationHub })));
+const PhotoManagement = React.lazy(() => import("../photos/PhotoManagement").then(m => ({ default: m.PhotoManagement })));
 
 // Placeholder components for sections that need implementation
 const PlaceholderSection = ({ sectionName }: { sectionName: string }) => (
@@ -71,20 +90,20 @@ export const createSectionRegistry = () => {
       onBack={() => console.log('Navigate back')} 
       onSave={(customer) => console.log('Save customer:', customer)} 
     />,
-    'pipeline': <PlaceholderSection sectionName="Sales Pipeline" />,
-    'communication': <PlaceholderSection sectionName="Communication" />,
+    'pipeline': <PipelineManagement />,
+    'communication': <CommunicationHub />,
     'reviews': <PlaceholderSection sectionName="Review Management" />,
     
     // Job Management
     'jobs': <JobList />,
-    'schedule': <PlaceholderSection sectionName="Schedule View" />,
-    'time-tracking': <PlaceholderSection sectionName="Time Tracking" />,
-    'photos': <PlaceholderSection sectionName="Photo Documentation" />,
-    'safety': <PlaceholderSection sectionName="Safety Management" />,
-    'quality': <PlaceholderSection sectionName="Quality Control" />,
+    'schedule': <ScheduleView />,
+    'time-tracking': <TimeTracking />,
+    'photos': <PhotoManagement />,
+    'safety': <SafetyManagement />,
+    'quality': <QualityControl />,
     
     // Financial Management
-    'estimates': <PlaceholderSection sectionName="Estimates" />,
+    'estimates': <EstimateList />,
     'invoices': <InvoiceList />,
     'expenses': <ExpenseList />,
     'goals': <ReportsCenter />,
@@ -93,9 +112,9 @@ export const createSectionRegistry = () => {
     
     // Team & Resources
     'team-management': <TeamDashboard />,
-    'inventory': <PlaceholderSection sectionName="Inventory" />,
-    'equipment': <PlaceholderSection sectionName="Equipment Tracking" />,
-    'vehicles': <PlaceholderSection sectionName="Vehicle Management" />,
+    'inventory': <InventoryManagement />,
+    'equipment': <EquipmentManagement />,
+    'vehicles': <VehicleManagement />,
     
     // Advanced Features
     'client-appointment': <PlaceholderSection sectionName="Client Appointments" />,
@@ -124,6 +143,7 @@ export const createSectionRegistry = () => {
     'integrations': <IntegrationsHub />,
     'reports': <ReportsCenter />,
     'back-office': <AdvancedSettings />,
+    'security-center': <SecurityCenter />,
     'map-view': <MapView jobs={transformedJobs} />,
     
     // Auth & Recovery

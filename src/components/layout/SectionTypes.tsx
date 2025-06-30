@@ -5,7 +5,7 @@ import {
   Map, Bell, MessageSquare, Camera, Shield, CheckSquare,
   Building, Wrench, DollarSign, TrendingUp, Crown, Database,
   BarChart3, Calculator, Zap, UserCog, User, HelpCircle,
-  Key, Code, Star, PlayCircle, Activity, Plug
+  Key, Code, Star, PlayCircle, Activity, Plug, Timer, AlertTriangle
 } from "lucide-react";
 
 export interface Section {
@@ -26,7 +26,7 @@ export const sections: Section[] = [
   { id: 'schedule', title: 'Schedule', icon: Calendar, category: 'core' },
   
   // Operations
-  { id: 'time-tracking', title: 'Time Tracking', icon: Clock, category: 'operations' },
+  { id: 'time-tracking', title: 'Time Tracking', icon: Timer, category: 'operations' },
   { id: 'estimates', title: 'Estimates', icon: FileText, category: 'operations' },
   { id: 'invoices', title: 'Invoices', icon: Receipt, category: 'operations' },
   { id: 'expenses', title: 'Expenses', icon: CreditCard, category: 'operations' },
@@ -71,6 +71,7 @@ export const sections: Section[] = [
   { id: 'notifications', title: 'Notifications', icon: Bell, category: 'tools' },
   { id: 'map-view', title: 'Map View', icon: Map, category: 'tools' },
   { id: 'back-office', title: 'Settings', icon: Settings, category: 'tools' },
+  { id: 'security-center', title: 'Security Center', icon: Shield, category: 'tools' },
   
   // Admin (Owner Access Required)
   { id: 'admin-panel', title: 'Admin Panel', icon: Crown, category: 'admin', requiresOwnerAccess: true },
