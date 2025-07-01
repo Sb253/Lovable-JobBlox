@@ -60,14 +60,14 @@ export const AuthProvider: React.FC<{ children: React.ReactNode }> = ({ children
     
     try {
       // Simulate API delay
-      await new Promise(resolve => setTimeout(resolve, 1000));
+      await new Promise(resolve => setTimeout(resolve, 800));
       
-      // Full access login for demo
+      // Full access login for demo - single tenant mode
       if (credentials.email === 'owner@jobblox.com' && credentials.password === 'fullaccess2024') {
         const fullAccessUser: User = {
-          id: 'owner-full-access-123',
-          email: 'owner@jobblox.com',
-          name: 'System Owner (Full Access)',
+          id: 'owner-peak-pros-123',
+          email: 'owner@peakpros.com',
+          name: 'Peak Pros Owner',
           role: 'owner',
           permissions: [
             'view_dashboard',
@@ -81,7 +81,8 @@ export const AuthProvider: React.FC<{ children: React.ReactNode }> = ({ children
             'owner_access',
             'user_management',
             'system_settings',
-            'full_access'
+            'full_access',
+            'company_settings'
           ],
           status: 'active',
           lastLogin: new Date().toISOString(),
@@ -94,34 +95,46 @@ export const AuthProvider: React.FC<{ children: React.ReactNode }> = ({ children
         localStorage.setItem('ownerAccess', 'true');
         
         toast({
-          title: "Full Access Granted!",
-          description: `Welcome ${fullAccessUser.name}! All features unlocked.`,
+          title: "Welcome to JobBlox!",
+          description: `Welcome ${fullAccessUser.name}! Full access granted for Peak Pros.`,
         });
         
         return true;
       }
       
-      // For demo purposes, accept any email/password combination
-      if (isDemoMode || credentials.email === 'demo@jobblox.com') {
-        const userData = defaultDemoConfig.demoUser;
-        setUser(userData);
+      // Quick demo access
+      if (!credentials.email || credentials.email === 'demo@jobblox.com') {
+        const demoUser: User = {
+          id: 'demo-peak-pros-456',
+          email: 'demo@peakpros.com',
+          name: 'Peak Pros Demo User',
+          role: 'admin',
+          permissions: ['view_dashboard', 'manage_customers', 'manage_jobs', 'view_reports'],
+          status: 'active',
+          lastLogin: new Date().toISOString(),
+          createdAt: new Date().toISOString()
+        };
+        
+        setUser(demoUser);
         setIsAuthenticated(true);
-        localStorage.setItem('authUser', JSON.stringify(userData));
+        setIsDemoMode(true);
+        localStorage.setItem('authUser', JSON.stringify(demoUser));
+        localStorage.setItem('demoMode', 'true');
         
         toast({
-          title: "Login Successful",
-          description: `Welcome back, ${userData.name}!`,
+          title: "Demo Access Granted",
+          description: `Welcome to JobBlox demo for Peak Pros!`,
         });
         
         return true;
       }
       
-      // Mock validation for other credentials
+      // Standard login for any other credentials
       if (credentials.email && credentials.password) {
         const userData: User = {
-          id: 'user-' + Date.now(),
+          id: 'user-peak-pros-' + Date.now(),
           email: credentials.email,
-          name: credentials.email.split('@')[0],
+          name: credentials.email.split('@')[0] || 'Peak Pros User',
           role: 'admin',
           permissions: ['view_dashboard', 'manage_customers', 'manage_jobs', 'view_reports'],
           status: 'active',
@@ -135,7 +148,7 @@ export const AuthProvider: React.FC<{ children: React.ReactNode }> = ({ children
         
         toast({
           title: "Login Successful",
-          description: `Welcome, ${userData.name}!`,
+          description: `Welcome to JobBlox, ${userData.name}!`,
         });
         
         return true;
@@ -164,11 +177,14 @@ export const AuthProvider: React.FC<{ children: React.ReactNode }> = ({ children
   const logout = () => {
     setUser(null);
     setIsAuthenticated(false);
+    setIsDemoMode(false);
     localStorage.removeItem('authUser');
+    localStorage.removeItem('ownerAccess');
+    localStorage.removeItem('demoMode');
     
     toast({
       title: "Logged Out",
-      description: "You have been successfully logged out.",
+      description: "You have been successfully logged out of JobBlox.",
     });
   };
 

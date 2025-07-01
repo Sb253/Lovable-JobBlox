@@ -1,5 +1,6 @@
 
 import React from 'react';
+import { demoDataService } from "../../services/demoDataService";
 
 // Lazy load all components for better performance
 const Dashboard = React.lazy(() => import("../Dashboard").then(m => ({ default: m.Dashboard })));
@@ -64,7 +65,6 @@ const PlaceholderSection = ({ sectionName }: { sectionName: string }) => (
 
 export const createSectionRegistry = () => {
   // Get demo data for map view
-  const { demoDataService } = require("../../services/demoDataService");
   const demoJobs = demoDataService.getJobs();
   const transformedJobs = demoJobs.map((job: any) => ({
     id: job.id,
