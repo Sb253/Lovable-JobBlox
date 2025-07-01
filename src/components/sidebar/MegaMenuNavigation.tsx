@@ -26,21 +26,25 @@ export const MegaMenuNavigation = ({
     <ScrollArea className="flex-1 px-2">
       <div className="space-y-2">
         {menuGroups.map((group) => {
-          if (group.items.length === 0) return null;
+          if (!group.items || group.items.length === 0) return null;
           
           const isOpen = openGroups.includes(group.label) || group.defaultOpen;
           const GroupIcon = group.icon;
+          const hasActiveSection = group.items.some(item => item.id === activeSection);
           
           return (
             <Collapsible key={group.label} open={isOpen} onOpenChange={() => onToggleGroup(group.label)}>
               <CollapsibleTrigger asChild>
                 <Button
                   variant="ghost"
-                  className="w-full justify-between p-3 h-auto font-medium text-left text-slate-300 hover:text-white hover:bg-slate-800"
+                  className={cn(
+                    "w-full justify-between p-3 h-auto font-medium text-left text-slate-300 hover:text-white hover:bg-slate-800",
+                    hasActiveSection && "bg-slate-800 text-white"
+                  )}
                 >
                   <div className="flex items-center gap-3">
                     <GroupIcon className="h-4 w-4" />
-                    <span>{group.label}</span>
+                    <span className="text-sm">{group.label}</span>
                   </div>
                   {isOpen ? (
                     <ChevronDown className="h-4 w-4" />

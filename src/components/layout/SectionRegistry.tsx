@@ -18,7 +18,7 @@ const HelpCenterPage = React.lazy(() => import("../support/HelpCenterPage").then
 const OnboardingFlow = React.lazy(() => import("../onboarding/OnboardingFlow").then(m => ({ default: m.OnboardingFlow })));
 const APIDocumentationPage = React.lazy(() => import("../api/APIDocumentationPage").then(m => ({ default: m.APIDocumentationPage })));
 
-// New comprehensive pages
+// Core business components
 const TeamDashboard = React.lazy(() => import("../team/TeamDashboard").then(m => ({ default: m.TeamDashboard })));
 const NotificationCenter = React.lazy(() => import("../notifications/NotificationCenter").then(m => ({ default: m.NotificationCenter })));
 const ActivityFeed = React.lazy(() => import("../activity/ActivityFeed").then(m => ({ default: m.ActivityFeed })));
@@ -45,7 +45,7 @@ const VehicleManagement = React.lazy(() => import("../resources/VehicleManagemen
 const ResponsiveDashboard = React.lazy(() => import("../mobile/ResponsiveDashboard").then(m => ({ default: m.ResponsiveDashboard })));
 const MobileCustomerForm = React.lazy(() => import("../forms/MobileCustomerForm").then(m => ({ default: m.MobileCustomerForm })));
 
-// Additional advanced components
+// Advanced components
 const PipelineManagement = React.lazy(() => import("../advanced/PipelineManagement").then(m => ({ default: m.PipelineManagement })));
 const CommunicationHub = React.lazy(() => import("../communication/CommunicationHub").then(m => ({ default: m.CommunicationHub })));
 const PhotoManagement = React.lazy(() => import("../photos/PhotoManagement").then(m => ({ default: m.PhotoManagement })));
@@ -84,9 +84,11 @@ export const createSectionRegistry = () => {
   }));
 
   return {
-    // Core sections
-    'home': <ResponsiveDashboard onSectionChange={(section) => console.log('Navigate to', section)} />,
+    // Dashboard & Overview
     'dashboard': <Dashboard />,
+    'home': <ResponsiveDashboard onSectionChange={(section) => console.log('Navigate to', section)} />,
+    'goals': <ReportsCenter />,
+    'quick-actions': <PlaceholderSection sectionName="Quick Actions" />,
     
     // Customer Management
     'customers': <CustomerList />,
@@ -94,12 +96,14 @@ export const createSectionRegistry = () => {
       onBack={() => console.log('Navigate back')} 
       onSave={(customer) => console.log('Save customer:', customer)} 
     />,
-    'pipeline': <PipelineManagement />,
+    'client-appointment': <PlaceholderSection sectionName="Client Appointments" />,
     'communication': <CommunicationHub />,
     'reviews': <PlaceholderSection sectionName="Review Management" />,
     
-    // Job Management
+    // Job Operations
     'jobs': <JobList />,
+    'job-form': <PlaceholderSection sectionName="Job Form" />,
+    'pipeline': <PipelineManagement />,
     'schedule': <ScheduleView />,
     'time-tracking': <TimeTracking />,
     'photos': <PhotoManagement />,
@@ -110,52 +114,64 @@ export const createSectionRegistry = () => {
     'estimates': <EstimateList />,
     'invoices': <InvoiceList />,
     'expenses': <ExpenseList />,
-    'goals': <ReportsCenter />,
-    'profit-analysis': <PlaceholderSection sectionName="Profit Analysis" />,
     'tax-financial': <PlaceholderSection sectionName="Tax & Financial" />,
+    'financial-analytics': <PlaceholderSection sectionName="Financial Analytics" />,
+    'payment-integration': <PlaceholderSection sectionName="Payment Integration" />,
+    'profit-analysis': <PlaceholderSection sectionName="Profit Analysis" />,
+    'quickbooks-integration': <PlaceholderSection sectionName="QuickBooks Integration" />,
+    'accounting-integration': <PlaceholderSection sectionName="Accounting Integration" />,
     
     // Team & Resources
     'team-management': <TeamDashboard />,
+    'hr-features': <PlaceholderSection sectionName="HR Features" />,
+    'subcontractor-management': <PlaceholderSection sectionName="Subcontractor Management" />,
+    'materials-services': <PlaceholderSection sectionName="Materials & Services" />,
     'inventory': <InventoryManagement />,
     'equipment': <EquipmentManagement />,
     'vehicles': <VehicleManagement />,
-    
-    // Advanced Features
-    'client-appointment': <PlaceholderSection sectionName="Client Appointments" />,
-    
-    // Management
-    'branch-management': <PlaceholderSection sectionName="Multi-Branch Management" />,
+    'advanced-inventory': <PlaceholderSection sectionName="Advanced Inventory" />,
+    'employee-locations': <PlaceholderSection sectionName="Employee Locations" />,
+    'radius-assignment': <PlaceholderSection sectionName="Radius Assignment" />,
     'location-management': <PlaceholderSection sectionName="Location Management" />,
     
-    // Account & Profile
+    // AI & Automation
+    'ai-chat': <PlaceholderSection sectionName="AI Chat Assistant" />,
+    'smart-document-generator': <PlaceholderSection sectionName="Smart Document Generator" />,
+    'predictive-analytics': <PlaceholderSection sectionName="Predictive Analytics" />,
+    'ai-settings': <PlaceholderSection sectionName="AI Settings" />,
+    
+    // Integrations
+    'integrations': <IntegrationsHub />,
+    
+    // Reports & Analytics
+    'reports': <ReportsCenter />,
+    'analytics': <PlaceholderSection sectionName="Advanced Analytics" />,
+    'map-view': <MapView jobs={transformedJobs} />,
+    'advanced-reporting': <PlaceholderSection sectionName="Advanced Reporting" />,
+    
+    // Communication
+    'team-chat': <PlaceholderSection sectionName="Team Chat" />,
+    'notifications': <NotificationCenter />,
+    
+    // Settings & Administration
+    'company-settings': <CompanySettings />,
+    'back-office': <AdvancedSettings />,
+    'mobile-settings': <PlaceholderSection sectionName="Mobile Settings" />,
+    'branch-management': <PlaceholderSection sectionName="Multi-Branch Management" />,
+    
+    // Additional sections
     'profile': <UserProfilePage />,
     'billing': <BillingPage />,
     'onboarding': <OnboardingFlow />,
-    
-    // Support & Resources
     'help-center': <HelpCenterPage />,
     'api-docs': <APIDocumentationPage />,
-    
-    // Admin sections
     'admin-panel': <AdvancedSettings />,
     'user-management': <TeamDashboard />,
     'system-settings': <AdvancedSettings />,
-    
-    // Tools & Features
-    'notifications': <NotificationCenter />,
     'activity-feed': <ActivityFeed />,
-    'integrations': <IntegrationsHub />,
-    'reports': <ReportsCenter />,
-    'back-office': <AdvancedSettings />,
     'security-center': <SecurityCenter />,
-    'map-view': <MapView jobs={transformedJobs} />,
-    
-    // Settings
     'settings': <AdvancedSettings />,
-    'company-settings': <CompanySettings />,
     'security': <SecurityCenter />,
-    
-    // Auth & Recovery
     'password-recovery': <PasswordRecoveryPage />
   };
 };
