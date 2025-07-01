@@ -32,8 +32,17 @@ export const MegaMenuNavigation = ({
           const GroupIcon = group.icon;
           const hasActiveSection = group.items.some(item => item.id === activeSection);
           
+          console.log(`Group: ${group.label}, isOpen: ${isOpen}, hasActiveSection: ${hasActiveSection}`);
+          
           return (
-            <Collapsible key={group.label} open={isOpen} onOpenChange={() => onToggleGroup(group.label)}>
+            <Collapsible 
+              key={group.label} 
+              open={isOpen} 
+              onOpenChange={() => {
+                console.log(`Collapsible onOpenChange called for: ${group.label}`);
+                onToggleGroup(group.label);
+              }}
+            >
               <CollapsibleTrigger asChild>
                 <Button
                   variant="ghost"

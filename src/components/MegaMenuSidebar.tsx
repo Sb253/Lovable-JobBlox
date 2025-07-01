@@ -34,6 +34,8 @@ export const MegaMenuSidebar = ({
     name: 'JobBlox',
     logo: null
   });
+  
+  // Initialize with Dashboard & Overview open by default
   const [openGroups, setOpenGroups] = useState<string[]>(['Dashboard & Overview']);
 
   useEffect(() => {
@@ -49,12 +51,13 @@ export const MegaMenuSidebar = ({
 
   const menuGroups = createMenuGroups(sections);
 
-  // Auto-expand group containing active section
+  // Auto-expand group containing active section and ensure it stays open
   useEffect(() => {
     const activeGroup = menuGroups.find(group => 
       group.items.some(item => item.id === activeSection)
     );
     if (activeGroup && !openGroups.includes(activeGroup.label)) {
+      console.log('MegaMenuSidebar: Auto-expanding group for active section:', activeGroup.label);
       setOpenGroups(prev => [...prev, activeGroup.label]);
     }
   }, [activeSection, menuGroups]);
