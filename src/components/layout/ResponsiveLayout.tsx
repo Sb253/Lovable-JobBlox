@@ -28,6 +28,11 @@ export const ResponsiveLayout = () => {
     return () => window.removeEventListener('resize', checkMobile);
   }, []);
 
+  const handleSectionChange = (section: string) => {
+    console.log('ResponsiveLayout: Section change:', section);
+    setActiveSection(section);
+  };
+
   const sections = [
     // Dashboard & Overview
     { id: 'dashboard', label: 'Home', icon: Home },
@@ -104,7 +109,7 @@ export const ResponsiveLayout = () => {
   return (
     <div className="min-h-screen bg-background">
       <AppHeader 
-        onSectionChange={setActiveSection}
+        onSectionChange={handleSectionChange}
         onMobileSidebarToggle={() => setSidebarCollapsed(!sidebarCollapsed)}
         isMobile={isMobile}
       />
@@ -112,7 +117,7 @@ export const ResponsiveLayout = () => {
       <div className="flex pt-16">
         <MegaMenuSidebar
           activeSection={activeSection}
-          onSectionChange={setActiveSection}
+          onSectionChange={handleSectionChange}
           sections={sections}
           isVisible={true}
           collapsed={sidebarCollapsed}
@@ -124,7 +129,7 @@ export const ResponsiveLayout = () => {
         } p-6`}>
           <SectionRegistry 
             activeSection={activeSection} 
-            onSectionChange={setActiveSection}
+            onSectionChange={handleSectionChange}
           />
         </main>
       </div>

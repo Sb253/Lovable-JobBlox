@@ -34,7 +34,7 @@ export const MegaMenuSidebar = ({
     name: 'JobBlox',
     logo: null
   });
-  const [openGroups, setOpenGroups] = useState<string[]>([]);
+  const [openGroups, setOpenGroups] = useState<string[]>(['Dashboard & Overview']);
 
   useEffect(() => {
     const savedCompanyData = localStorage.getItem('companySettings');
@@ -49,6 +49,7 @@ export const MegaMenuSidebar = ({
 
   const menuGroups = createMenuGroups(sections);
 
+  // Auto-expand group containing active section
   useEffect(() => {
     const activeGroup = menuGroups.find(group => 
       group.items.some(item => item.id === activeSection)
@@ -56,7 +57,7 @@ export const MegaMenuSidebar = ({
     if (activeGroup && !openGroups.includes(activeGroup.label)) {
       setOpenGroups(prev => [...prev, activeGroup.label]);
     }
-  }, [activeSection, menuGroups, openGroups]);
+  }, [activeSection, menuGroups]);
 
   if (collapsed) {
     return (
@@ -69,17 +70,25 @@ export const MegaMenuSidebar = ({
   }
 
   const toggleGroup = (groupLabel: string) => {
-    setOpenGroups(prev => 
-      prev.includes(groupLabel) 
+    console.log('MegaMenuSidebar: Toggling group:', groupLabel);
+    setOpenGroups(prev => {
+      const newGroups = prev.includes(groupLabel) 
         ? prev.filter(g => g !== groupLabel)
-        : [...prev, groupLabel]
-    );
+        : [...prev, groupLabel];
+      console.log('MegaMenuSidebar: New open groups:', newGroups);
+      return newGroups;
+    });
   };
 
   const handleToggleCollapse = () => {
     if (onToggleCollapse) {
       onToggleCollapse(!collapsed);
     }
+  };
+
+  const handleSectionChange = (sectionId: string) => {
+    console.log('MegaMenuSidebar: Section change requested:', sectionId);
+    onSectionChange(sectionId);
   };
 
   if (!isVisible) {
@@ -98,12 +107,12 @@ export const MegaMenuSidebar = ({
           variant="ghost"
           className={cn(
             "w-full justify-start gap-3 text-slate-300 hover:text-white hover:bg-slate-800",
-            activeSection === 'home' && "bg-blue-600 text-white hover:bg-blue-700"
+            activeSection === 'dashboard' && "bg-blue-600 text-white hover:bg-blue-700"
           )}
-          onClick={() => onSectionChange('home')}
+          onClick={() => handleSectionChange('dashboard')}
         >
           <Building2 className="h-5 w-5" />
-          <span>Home</span>
+          <span>Dashboard</span>
         </Button>
       </div>
       
@@ -112,7 +121,7 @@ export const MegaMenuSidebar = ({
         openGroups={openGroups}
         activeSection={activeSection}
         onToggleGroup={toggleGroup}
-        onSectionChange={onSectionChange}
+        onSectionChange={handleSectionChange}
       />
     </div>
   );

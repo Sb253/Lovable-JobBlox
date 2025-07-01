@@ -28,7 +28,7 @@ export const MegaMenuNavigation = ({
         {menuGroups.map((group) => {
           if (!group.items || group.items.length === 0) return null;
           
-          const isOpen = openGroups.includes(group.label) || group.defaultOpen;
+          const isOpen = openGroups.includes(group.label);
           const GroupIcon = group.icon;
           const hasActiveSection = group.items.some(item => item.id === activeSection);
           
@@ -68,7 +68,7 @@ export const MegaMenuNavigation = ({
                         isActive && "bg-blue-600 text-white hover:bg-blue-700"
                       )}
                       onClick={() => {
-                        console.log('MegaMenuSidebar: Section clicked:', section.id);
+                        console.log('MegaMenuNavigation: Section clicked:', section.id);
                         onSectionChange(section.id);
                       }}
                     >
