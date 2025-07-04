@@ -1,4 +1,3 @@
-
 import React from 'react';
 import { demoDataService } from "../../services/demoDataService";
 
@@ -54,7 +53,6 @@ const PhotoManagement = React.lazy(() => import("../photos/PhotoManagement").the
 const CompanySettings = React.lazy(() => import("../CompanySettings").then(m => ({ default: m.CompanySettings })));
 
 // New iPaaS and Advanced Settings Components
-const AdvancedIntegrationsHub = React.lazy(() => import("../iPaas/AdvancedIntegrationsHub").then(m => ({ default: m.AdvancedIntegrationsHub })));
 const BackOfficeHub = React.lazy(() => import("../backoffice/BackOfficeHub").then(m => ({ default: m.BackOfficeHub })));
 const AdvancedSettingsHub = React.lazy(() => import("../settings/AdvancedSettingsHub").then(m => ({ default: m.AdvancedSettingsHub })));
 const IPaaSManager = React.lazy(() => import("../iPaas/iPaaSManager").then(m => ({ default: m.IPaaSManager })));
@@ -146,8 +144,8 @@ export const createSectionRegistry = () => {
     'predictive-analytics': <PlaceholderSection sectionName="Predictive Analytics" />,
     'ai-settings': <PlaceholderSection sectionName="AI Settings" />,
     
-    // Integrations - Updated to use new Advanced Integrations Hub
-    'integrations': <AdvancedIntegrationsHub />,
+    // Integrations - Now points to Back Office Hub which contains Advanced Integrations
+    'integrations': <BackOfficeHub />,
     'ipaas-manager': <IPaaSManager />,
     
     // Reports & Analytics

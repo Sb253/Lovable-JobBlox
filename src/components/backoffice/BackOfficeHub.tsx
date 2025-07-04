@@ -1,4 +1,3 @@
-
 import React from 'react';
 import { Card, CardContent, CardHeader, CardTitle } from "@/components/ui/card";
 import { Button } from "@/components/ui/button";
@@ -26,6 +25,7 @@ import {
   Smartphone,
   Workflow
 } from "lucide-react";
+import { AdvancedIntegrationsHub } from "../iPaas/AdvancedIntegrationsHub";
 
 export const BackOfficeHub = () => {
   return (
@@ -283,64 +283,7 @@ export const BackOfficeHub = () => {
         </TabsContent>
 
         <TabsContent value="integrations" className="space-y-4">
-          <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-6">
-            <Card>
-              <CardHeader>
-                <CardTitle className="flex items-center gap-2">
-                  <Globe className="h-5 w-5" />
-                  Integration Status
-                </CardTitle>
-              </CardHeader>
-              <CardContent>
-                <div className="space-y-3">
-                  <div className="flex justify-between items-center">
-                    <span>Active Integrations</span>
-                    <span className="font-medium">12</span>
-                  </div>
-                  <div className="flex justify-between items-center">
-                    <span>Failed Syncs</span>
-                    <span className="font-medium">0</span>
-                  </div>
-                  <div className="flex justify-between items-center">
-                    <span>API Rate Limit</span>
-                    <span className="font-medium">78%</span>
-                  </div>
-                </div>
-              </CardContent>
-            </Card>
-
-            <Card>
-              <CardHeader>
-                <CardTitle className="flex items-center gap-2">
-                  <Zap className="h-5 w-5" />
-                  Webhook Management
-                </CardTitle>
-              </CardHeader>
-              <CardContent>
-                <div className="space-y-3">
-                  <Button variant="outline" className="w-full">Configure Webhooks</Button>
-                  <Button variant="outline" className="w-full">Test Endpoints</Button>
-                  <Button variant="outline" className="w-full">View Logs</Button>
-                </div>
-              </CardContent>
-            </Card>
-
-            <Card>
-              <CardHeader>
-                <CardTitle className="flex items-center gap-2">
-                  <Database className="h-5 w-5" />
-                  Data Sync
-                </CardTitle>
-              </CardHeader>
-              <CardContent>
-                <div className="space-y-3">
-                  <Button className="w-full">Force Sync All</Button>
-                  <Button variant="outline" className="w-full">Sync Schedule</Button>
-                  <Button variant="outline" className="w-full">Data Mapping</Button>
-                </div>
-              </CardContent>
-            </Card>
-          </div>
+          <AdvancedIntegrationsHub />
         </TabsContent>
 
         <TabsContent value="workflows" className="space-y-4">
