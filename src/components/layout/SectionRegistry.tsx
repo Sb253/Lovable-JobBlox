@@ -53,6 +53,12 @@ const PhotoManagement = React.lazy(() => import("../photos/PhotoManagement").the
 // Company Settings
 const CompanySettings = React.lazy(() => import("../CompanySettings").then(m => ({ default: m.CompanySettings })));
 
+// New iPaaS and Advanced Settings Components
+const AdvancedIntegrationsHub = React.lazy(() => import("../iPaas/AdvancedIntegrationsHub").then(m => ({ default: m.AdvancedIntegrationsHub })));
+const BackOfficeHub = React.lazy(() => import("../backoffice/BackOfficeHub").then(m => ({ default: m.BackOfficeHub })));
+const AdvancedSettingsHub = React.lazy(() => import("../settings/AdvancedSettingsHub").then(m => ({ default: m.AdvancedSettingsHub })));
+const IPaaSManager = React.lazy(() => import("../iPaas/iPaaSManager").then(m => ({ default: m.IPaaSManager })));
+
 // Placeholder components for sections that need implementation
 const PlaceholderSection = ({ sectionName }: { sectionName: string }) => (
   <div className="p-6">
@@ -140,8 +146,9 @@ export const createSectionRegistry = () => {
     'predictive-analytics': <PlaceholderSection sectionName="Predictive Analytics" />,
     'ai-settings': <PlaceholderSection sectionName="AI Settings" />,
     
-    // Integrations
-    'integrations': <IntegrationsHub />,
+    // Integrations - Updated to use new Advanced Integrations Hub
+    'integrations': <AdvancedIntegrationsHub />,
+    'ipaas-manager': <IPaaSManager />,
     
     // Reports & Analytics
     'reports': <ReportsCenter />,
@@ -153,9 +160,9 @@ export const createSectionRegistry = () => {
     'team-chat': <PlaceholderSection sectionName="Team Chat" />,
     'notifications': <NotificationCenter />,
     
-    // Settings & Administration
+    // Settings & Administration - Updated to use new components
     'company-settings': <CompanySettings />,
-    'back-office': <AdvancedSettings />,
+    'back-office': <BackOfficeHub />,
     'mobile-settings': <PlaceholderSection sectionName="Mobile Settings" />,
     'branch-management': <PlaceholderSection sectionName="Multi-Branch Management" />,
     
@@ -165,12 +172,12 @@ export const createSectionRegistry = () => {
     'onboarding': <OnboardingFlow />,
     'help-center': <HelpCenterPage />,
     'api-docs': <APIDocumentationPage />,
-    'admin-panel': <AdvancedSettings />,
+    'admin-panel': <AdvancedSettingsHub />,
     'user-management': <TeamDashboard />,
-    'system-settings': <AdvancedSettings />,
+    'system-settings': <AdvancedSettingsHub />,
     'activity-feed': <ActivityFeed />,
     'security-center': <SecurityCenter />,
-    'settings': <AdvancedSettings />,
+    'settings': <AdvancedSettingsHub />,
     'security': <SecurityCenter />,
     'password-recovery': <PasswordRecoveryPage />
   };
