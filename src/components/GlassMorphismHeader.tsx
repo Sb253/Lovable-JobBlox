@@ -1,6 +1,5 @@
 
 import React, { useState } from 'react';
-import { useNavigate } from 'react-router-dom';
 import { Button } from "@/components/ui/button";
 import { Badge } from "@/components/ui/badge";
 import { Input } from "@/components/ui/input";
@@ -17,15 +16,12 @@ import {
   PopoverContent,
   PopoverTrigger,
 } from "@/components/ui/popover";
-import { ScrollArea } from "@/components/ui/scroll-area";
 import { 
   Home, Users, Briefcase, Calendar, DollarSign, Settings, 
   Search, Bell, User, LogOut, Zap, Building2, 
   FileText, Timer, Camera, TrendingUp, MapPin,
   MessageSquare, Shield, Package, UserCheck, Brain
 } from "lucide-react";
-import { useAuth } from '../contexts/AuthContext';
-import { getAppName, getCurrentTenant } from '../config/tenant';
 import { cn } from "@/lib/utils";
 
 interface GlassMorphismHeaderProps {
@@ -34,18 +30,8 @@ interface GlassMorphismHeaderProps {
 }
 
 export const GlassMorphismHeader = ({ onSectionChange, activeSection }: GlassMorphismHeaderProps) => {
-  const navigate = useNavigate();
-  const { user, logout } = useAuth();
   const [searchQuery, setSearchQuery] = useState('');
   const [megaMenuOpen, setMegaMenuOpen] = useState(false);
-  
-  const tenant = getCurrentTenant();
-  const appName = getAppName();
-
-  const handleLogout = () => {
-    logout();
-    navigate('/signin');
-  };
 
   const menuGroups = [
     {
@@ -107,16 +93,9 @@ export const GlassMorphismHeader = ({ onSectionChange, activeSection }: GlassMor
           <div className="w-8 h-8 bg-gradient-to-br from-blue-500 to-purple-600 rounded-lg flex items-center justify-center">
             <Zap className="h-5 w-5 text-white" />
           </div>
-          <div className="flex flex-col">
-            <h1 className="text-lg font-bold bg-gradient-to-r from-blue-400 to-purple-400 bg-clip-text text-transparent">
-              {appName}
-            </h1>
-            {tenant.companyName !== appName && (
-              <span className="text-xs text-white/70 truncate max-w-[200px]">
-                {tenant.companyName}
-              </span>
-            )}
-          </div>
+          <h1 className="text-lg font-bold bg-gradient-to-r from-blue-400 to-purple-400 bg-clip-text text-transparent">
+            JobBlox
+          </h1>
         </div>
 
         {/* Navigation Icons */}
@@ -238,20 +217,18 @@ export const GlassMorphismHeader = ({ onSectionChange, activeSection }: GlassMor
                   <User className="h-4 w-4 text-white" />
                 </div>
                 <span className="hidden md:block text-sm font-medium">
-                  {user?.name || user?.email?.split('@')[0]}
+                  User
                 </span>
               </Button>
             </DropdownMenuTrigger>
             <DropdownMenuContent align="end" className="w-56 glass-strong border-white/30">
               <DropdownMenuLabel className="text-white">
                 <div className="flex flex-col space-y-1">
-                  <p className="text-sm font-medium">{user?.name || 'User'}</p>
-                  <p className="text-xs text-white/70">{user?.email}</p>
-                  {user?.role && (
-                    <Badge variant="secondary" className="w-fit glass-subtle">
-                      {user.role}
-                    </Badge>
-                  )}
+                  <p className="text-sm font-medium">User Profile</p>
+                  <p className="text-xs text-white/70">user@example.com</p>
+                  <Badge variant="secondary" className="w-fit glass-subtle">
+                    Admin
+                  </Badge>
                 </div>
               </DropdownMenuLabel>
               <DropdownMenuSeparator className="bg-white/20" />
@@ -270,10 +247,7 @@ export const GlassMorphismHeader = ({ onSectionChange, activeSection }: GlassMor
                 Settings
               </DropdownMenuItem>
               <DropdownMenuSeparator className="bg-white/20" />
-              <DropdownMenuItem 
-                onClick={handleLogout}
-                className="text-white/80 hover:text-white hover:bg-white/20"
-              >
+              <DropdownMenuItem className="text-white/80 hover:text-white hover:bg-white/20">
                 <LogOut className="h-4 w-4 mr-2" />
                 Sign Out
               </DropdownMenuItem>
