@@ -1,6 +1,6 @@
 
-import { ResponsiveLayout } from "./layout/ResponsiveLayout";
+import { MobileFirstLayout } from "./layout/MobileFirstLayout";
 
 export const AppLayout = () => {
-  return <ResponsiveLayout />;
+  return <MobileFirstLayout />;
 };
