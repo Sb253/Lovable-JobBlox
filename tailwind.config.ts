@@ -61,43 +61,13 @@ export default {
           DEFAULT: "hsl(var(--card))",
           foreground: "hsl(var(--card-foreground))",
         },
-        // Enhanced vibrant colors for both modes (no yellow)
-        vibrant: {
-          purple: "#8B5CF6",
-          blue: "#3B82F6", 
-          green: "#10B981",
-          coral: "#FF6B6B",
-          red: "#EF4444",
-          pink: "#EC4899",
-          indigo: "#6366F1",
-          cyan: "#06B6D4",
-          orange: "#F97316",
-          lime: "#84CC16",
-          emerald: "#059669",
-          teal: "#0D9488",
-          violet: "#7C3AED",
-          fuchsia: "#C026D3",
-          rose: "#F43F5E",
-          amber: "#D97706",
-        },
-        // Dark mode vibrant colors (no yellow)
-        "vibrant-dark": {
-          purple: "#A78BFA",
-          blue: "#60A5FA",
-          green: "#34D399", 
-          coral: "#FF8E8E",
-          red: "#F87171",
-          pink: "#F472B6",
-          indigo: "#818CF8",
-          cyan: "#22D3EE",
-          orange: "#FB923C",
-          lime: "#A3E635",
-          emerald: "#6EE7B7",
-          teal: "#5EEAD4",
-          violet: "#8B5CF6",
-          fuchsia: "#E879F9",
-          rose: "#FB7185",
-          amber: "#FCD34D",
+        // Glass morphism color palette
+        glass: {
+          primary: "rgba(255, 255, 255, 0.1)",
+          secondary: "rgba(255, 255, 255, 0.05)",
+          accent: "rgba(59, 130, 246, 0.2)",
+          border: "rgba(255, 255, 255, 0.2)",
+          overlay: "rgba(0, 0, 0, 0.3)",
         },
       },
       borderRadius: {
@@ -116,6 +86,9 @@ export default {
       },
       minWidth: {
         'touch-target': '44px',
+      },
+      backdropBlur: {
+        xs: '2px',
       },
       keyframes: {
         "accordion-down": {
@@ -143,6 +116,14 @@ export default {
           "100%": {
             transform: "translateY(0)"
           }
+        },
+        "glass-shimmer": {
+          "0%": {
+            backgroundPosition: "-200% 0"
+          },
+          "100%": {
+            backgroundPosition: "200% 0"
+          }
         }
       },
       animation: {
@@ -150,14 +131,48 @@ export default {
         "accordion-up": "accordion-up 0.2s ease-out",
         "fade-in": "fade-in 0.3s ease-out",
         "slide-up": "slide-up 0.3s ease-out",
+        "glass-shimmer": "glass-shimmer 2s infinite linear",
+      },
+      backgroundImage: {
+        'glass-gradient': 'linear-gradient(135deg, rgba(255, 255, 255, 0.1) 0%, rgba(255, 255, 255, 0.05) 100%)',
+        'glass-border': 'linear-gradient(135deg, rgba(255, 255, 255, 0.3) 0%, rgba(255, 255, 255, 0.1) 100%)',
+        'dark-gradient': 'linear-gradient(135deg, #0f172a 0%, #1e293b 50%, #334155 100%)',
       },
     },
   },
   plugins: [
     require("tailwindcss-animate"),
-    // Mobile-first utilities
+    // Glass morphism utilities
     function({ addUtilities }: any) {
       const newUtilities = {
+        '.glass': {
+          background: 'rgba(255, 255, 255, 0.1)',
+          backdropFilter: 'blur(16px)',
+          borderRadius: '16px',
+          border: '1px solid rgba(255, 255, 255, 0.2)',
+          boxShadow: '0 8px 32px 0 rgba(31, 38, 135, 0.37)',
+        },
+        '.glass-strong': {
+          background: 'rgba(255, 255, 255, 0.15)',
+          backdropFilter: 'blur(20px)',
+          borderRadius: '20px',
+          border: '1px solid rgba(255, 255, 255, 0.3)',
+          boxShadow: '0 12px 40px 0 rgba(31, 38, 135, 0.5)',
+        },
+        '.glass-subtle': {
+          background: 'rgba(255, 255, 255, 0.05)',
+          backdropFilter: 'blur(8px)',
+          borderRadius: '12px',
+          border: '1px solid rgba(255, 255, 255, 0.1)',
+          boxShadow: '0 4px 16px 0 rgba(31, 38, 135, 0.2)',
+        },
+        '.glass-card': {
+          background: 'linear-gradient(135deg, rgba(255, 255, 255, 0.1) 0%, rgba(255, 255, 255, 0.05) 100%)',
+          backdropFilter: 'blur(16px)',
+          borderRadius: '16px',
+          border: '1px solid rgba(255, 255, 255, 0.2)',
+          boxShadow: '0 8px 32px 0 rgba(31, 38, 135, 0.37)',
+        },
         '.safe-area-inset-top': {
           paddingTop: 'env(safe-area-inset-top)',
         },
