@@ -4,7 +4,7 @@ import { Card, CardContent, CardHeader, CardTitle } from "@/components/ui/card";
 import { Button } from "@/components/ui/button";
 import { Badge } from "@/components/ui/badge";
 import { ScrollArea } from "@/components/ui/scroll-area";
-import { RefreshCw, TrendingUp, Users, Briefcase, DollarSign, Plus, ArrowRight, Clock, MapPin } from "lucide-react";
+import { RefreshCw, TrendingUp, Users, Briefcase, DollarSign, Plus, ArrowRight, Clock, MapPin, Camera } from "lucide-react";
 import { SwipeableCard } from "./SwipeableCard";
 import { cn } from "@/lib/utils";
 
