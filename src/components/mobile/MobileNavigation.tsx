@@ -117,4 +117,3 @@ export const MobileNavigation = ({ activeSection, onSectionChange, sections }: M
     </>
   );
 };
-</tml>
