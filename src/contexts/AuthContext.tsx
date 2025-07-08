@@ -1,8 +1,9 @@
-
-import React, { createContext, useContext, useState, useEffect } from 'react';
+import { createContext, useContext, useState, useEffect, ReactNode } from 'react';
 import { User, AuthState, LoginCredentials } from '../types/auth';
 import { defaultDemoConfig } from '../types/demo';
 import { useToast } from '../hooks/use-toast';
+import { useTenant } from './TenantContext';
+import { isSingleTenantMode } from '../config/tenant-mode';
 
 interface AuthContextType extends AuthState {
   login: (credentials: LoginCredentials) => Promise<boolean>;
@@ -29,6 +30,16 @@ export const AuthProvider: React.FC<{ children: React.ReactNode }> = ({ children
   const [isDemoMode, setIsDemoMode] = useState(false);
   const { toast } = useToast();
 
+  // Get tenant context if available
+  let tenantId = '';
+  try {
+    const { tenantId: contextTenantId } = useTenant();
+    tenantId = contextTenantId;
+  } catch {
+    // useTenant not available, use default
+    tenantId = 'acme-corp';
+  }
+
   useEffect(() => {
     // Check for demo mode setting
     const demoMode = localStorage.getItem('demoMode') === 'true';
@@ -37,13 +48,23 @@ export const AuthProvider: React.FC<{ children: React.ReactNode }> = ({ children
     if (demoMode || defaultDemoConfig.enabled) {
       setIsDemoMode(true);
       if (defaultDemoConfig.autoLogin) {
-        setUser(defaultDemoConfig.demoUser);
+        // Add tenant info to demo user
+        const demoUserWithTenant = {
+          ...defaultDemoConfig.demoUser,
+          tenantId: isSingleTenantMode() ? 'acme-corp' : tenantId
+        };
+        setUser(demoUserWithTenant);
         setIsAuthenticated(true);
-        localStorage.setItem('authUser', JSON.stringify(defaultDemoConfig.demoUser));
+        localStorage.setItem('authUser', JSON.stringify(demoUserWithTenant));
       }
     } else if (savedUser) {
       try {
         const userData = JSON.parse(savedUser);
+        // Ensure user has tenant info
+        if (!userData.tenantId) {
+          userData.tenantId = isSingleTenantMode() ? 'acme-corp' : tenantId;
+          localStorage.setItem('authUser', JSON.stringify(userData));
+        }
         setUser(userData);
         setIsAuthenticated(true);
       } catch (error) {
@@ -53,7 +74,7 @@ export const AuthProvider: React.FC<{ children: React.ReactNode }> = ({ children
     }
     
     setIsLoading(false);
-  }, []);
+  }, [tenantId]);
 
   const login = async (credentials: LoginCredentials): Promise<boolean> => {
     setIsLoading(true);
@@ -62,13 +83,14 @@ export const AuthProvider: React.FC<{ children: React.ReactNode }> = ({ children
       // Simulate API delay
       await new Promise(resolve => setTimeout(resolve, 800));
       
-      // Full access login for demo - single tenant mode
+      // Full access login for demo - now tenant-aware
       if (credentials.email === 'owner@jobblox.com' && credentials.password === 'fullaccess2024') {
         const fullAccessUser: User = {
-          id: 'owner-peak-pros-123',
+          id: `owner-${tenantId}-123`,
           email: 'owner@peakpros.com',
           name: 'Peak Pros Owner',
           role: 'owner',
+          tenantId: tenantId,
           permissions: [
             'view_dashboard',
             'manage_customers', 
@@ -96,46 +118,20 @@ export const AuthProvider: React.FC<{ children: React.ReactNode }> = ({ children
         
         toast({
           title: "Welcome to JobBlox!",
-          description: `Welcome ${fullAccessUser.name}! Full access granted for Peak Pros.`,
+          description: `Welcome ${fullAccessUser.name}! Full access granted${isSingleTenantMode() ? '' : ` for ${tenantId}`}.`,
         });
         
         return true;
       }
       
-      // Quick demo access
-      if (!credentials.email || credentials.email === 'demo@jobblox.com') {
-        const demoUser: User = {
-          id: 'demo-peak-pros-456',
-          email: 'demo@peakpros.com',
-          name: 'Peak Pros Demo User',
-          role: 'admin',
-          permissions: ['view_dashboard', 'manage_customers', 'manage_jobs', 'view_reports'],
-          status: 'active',
-          lastLogin: new Date().toISOString(),
-          createdAt: new Date().toISOString()
-        };
-        
-        setUser(demoUser);
-        setIsAuthenticated(true);
-        setIsDemoMode(true);
-        localStorage.setItem('authUser', JSON.stringify(demoUser));
-        localStorage.setItem('demoMode', 'true');
-        
-        toast({
-          title: "Demo Access Granted",
-          description: `Welcome to JobBlox demo for Peak Pros!`,
-        });
-        
-        return true;
-      }
-      
-      // Standard login for any other credentials
+      // Standard login - now tenant-aware
       if (credentials.email && credentials.password) {
         const userData: User = {
-          id: 'user-peak-pros-' + Date.now(),
+          id: `user-${tenantId}-` + Date.now(),
           email: credentials.email,
-          name: credentials.email.split('@')[0] || 'Peak Pros User',
+          name: credentials.email.split('@')[0] || 'User',
           role: 'admin',
+          tenantId: tenantId,
           permissions: ['view_dashboard', 'manage_customers', 'manage_jobs', 'view_reports'],
           status: 'active',
           lastLogin: new Date().toISOString(),
@@ -148,7 +144,7 @@ export const AuthProvider: React.FC<{ children: React.ReactNode }> = ({ children
         
         toast({
           title: "Login Successful",
-          description: `Welcome to JobBlox, ${userData.name}!`,
+          description: `Welcome to JobBlox, ${userData.name}!${isSingleTenantMode() ? '' : ` (${tenantId})`}`,
         });
         
         return true;

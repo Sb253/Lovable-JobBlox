@@ -1,278 +1,168 @@
 
 import React, { useState } from 'react';
 import { Button } from "@/components/ui/button";
+import { DropdownMenu, DropdownMenuContent, DropdownMenuItem, DropdownMenuTrigger } from "@/components/ui/dropdown-menu";
 import { Badge } from "@/components/ui/badge";
-import { Input } from "@/components/ui/input";
-import {
-  DropdownMenu,
-  DropdownMenuContent,
-  DropdownMenuItem,
-  DropdownMenuLabel,
-  DropdownMenuSeparator,
-  DropdownMenuTrigger,
-} from "@/components/ui/dropdown-menu";
-import {
-  Popover,
-  PopoverContent,
-  PopoverTrigger,
-} from "@/components/ui/popover";
 import { 
-  Home, Users, Briefcase, Calendar, DollarSign, Settings, 
-  Search, Bell, User, LogOut, Zap, Building2, 
-  FileText, Timer, Camera, TrendingUp, MapPin,
-  MessageSquare, Shield, Package, UserCheck, Brain
+  Menu, X, Settings, User, LogOut, Sun, Moon, Search,
+  Home, Users, Briefcase, Calendar, FileText, BarChart3
 } from "lucide-react";
-import { useAuth } from '../hooks/useAuth';
-import { getAppName, getCurrentTenant } from '../config/tenant';
-import { cn } from "@/lib/utils";
+import { useTheme } from "next-themes";
+import { TenantHeader } from './tenant/TenantHeader';
+import { useTenant } from '../contexts/TenantContext';
+import { isMultiTenantMode } from '../config/tenant-mode';
 
 interface GlassMorphismHeaderProps {
   onSectionChange: (section: string) => void;
   activeSection: string;
 }
 
-export const GlassMorphismHeader = ({ onSectionChange, activeSection }: GlassMorphismHeaderProps) => {
-  const { user, logout } = useAuth();
-  const [searchQuery, setSearchQuery] = useState('');
-  const [megaMenuOpen, setMegaMenuOpen] = useState(false);
-  
-  const tenant = getCurrentTenant();
-  const appName = getAppName();
+export const GlassMorphismHeader: React.FC<GlassMorphismHeaderProps> = ({
+  onSectionChange,
+  activeSection
+}) => {
+  const [isMenuOpen, setIsMenuOpen] = useState(false);
+  const { theme, setTheme } = useTheme();
+  const { currentTenant } = useTenant();
 
-  const handleLogout = () => {
-    logout();
-  };
-
-  const menuGroups = [
-    {
-      label: "Core",
-      items: [
-        { id: 'home', icon: Home },
-        { id: 'dashboard', icon: Building2 },
-        { id: 'quick-actions', icon: Zap },
-      ]
-    },
-    {
-      label: "Operations", 
-      items: [
-        { id: 'jobs', icon: Briefcase },
-        { id: 'customers', icon: Users },
-        { id: 'schedule', icon: Calendar },
-        { id: 'time-tracking', icon: Timer },
-        { id: 'photos', icon: Camera },
-      ]
-    },
-    {
-      label: "Financial",
-      items: [
-        { id: 'estimates', icon: FileText },
-        { id: 'invoices', icon: FileText },
-        { id: 'expenses', icon: DollarSign },
-        { id: 'analytics', icon: TrendingUp },
-      ]
-    },
-    {
-      label: "Team & Resources",
-      items: [
-        { id: 'team-management', icon: UserCheck },
-        { id: 'inventory', icon: Package },
-        { id: 'map-view', icon: MapPin },
-      ]
-    },
-    {
-      label: "AI & Tools",
-      items: [
-        { id: 'ai-chat', icon: Brain },
-        { id: 'communication', icon: MessageSquare },
-        { id: 'safety', icon: Shield },
-        { id: 'company-settings', icon: Settings },
-      ]
-    }
+  const quickNavItems = [
+    { id: 'dashboard', label: 'Dashboard', icon: Home },
+    { id: 'customers', label: 'Customers', icon: Users },
+    { id: 'jobs', label: 'Jobs', icon: Briefcase },
+    { id: 'schedule', label: 'Schedule', icon: Calendar },
+    { id: 'estimates', label: 'Estimates', icon: FileText },
+    { id: 'reports', label: 'Reports', icon: BarChart3 },
   ];
 
-  const handleSectionClick = (sectionId: string) => {
+  const handleNavClick = (sectionId: string) => {
     onSectionChange(sectionId);
-    setMegaMenuOpen(false);
+    setIsMenuOpen(false);
   };
 
   return (
-    <header className="fixed top-0 left-0 right-0 h-16 glass border-b border-white/20 z-50">
-      <div className="flex items-center justify-between h-full px-6">
-        {/* Logo and App Name */}
-        <div className="flex items-center gap-3">
-          <div className="w-8 h-8 bg-gradient-to-br from-blue-500 to-purple-600 rounded-lg flex items-center justify-center">
-            <Zap className="h-5 w-5 text-white" />
-          </div>
-          <div className="flex flex-col">
-            <h1 className="text-lg font-bold bg-gradient-to-r from-blue-400 to-purple-400 bg-clip-text text-transparent">
-              {appName}
-            </h1>
-            {tenant.companyName !== appName && (
-              <span className="text-xs text-white/70 truncate max-w-[200px]">
-                {tenant.companyName}
-              </span>
-            )}
-          </div>
-        </div>
+    <header className="fixed top-0 left-0 right-0 z-50">
+      <div className="glass-strong border-b border-white/20">
+        <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
+          <div className="flex items-center justify-between h-16">
+            {/* Left side - Logo and Tenant Info */}
+            <div className="flex items-center gap-6">
+              <TenantHeader />
+              
+              {/* Quick Navigation - Desktop */}
+              <nav className="hidden lg:flex items-center gap-1">
+                {quickNavItems.map((item) => {
+                  const Icon = item.icon;
+                  const isActive = activeSection === item.id;
+                  
+                  return (
+                    <Button
+                      key={item.id}
+                      variant={isActive ? "default" : "ghost"}
+                      size="sm"
+                      onClick={() => handleNavClick(item.id)}
+                      className={`glass-subtle flex items-center gap-2 ${
+                        isActive ? 'bg-primary text-primary-foreground' : 'text-white/80 hover:text-white hover:bg-white/10'
+                      }`}
+                    >
+                      <Icon className="h-4 w-4" />
+                      <span className="hidden xl:inline">{item.label}</span>
+                    </Button>
+                  );
+                })}
+              </nav>
+            </div>
 
-        {/* Navigation Icons */}
-        <div className="hidden md:flex items-center gap-2">
-          {menuGroups.slice(0, 2).map((group) => 
-            group.items.slice(0, 4).map((item) => {
-              const Icon = item.icon;
-              return (
-                <Button
-                  key={item.id}
-                  variant="ghost"
-                  size="icon"
-                  className={cn(
-                    "glass-subtle text-white/80 hover:text-white hover:bg-white/20 transition-all duration-200",
-                    activeSection === item.id && "bg-blue-500/30 text-blue-300"
-                  )}
-                  onClick={() => handleSectionClick(item.id)}
-                >
-                  <Icon className="h-5 w-5" />
-                </Button>
-              );
-            })
-          )}
-          
-          {/* Mega Menu Trigger */}
-          <Popover open={megaMenuOpen} onOpenChange={setMegaMenuOpen}>
-            <PopoverTrigger asChild>
+            {/* Right side - Actions */}
+            <div className="flex items-center gap-2">
+              {/* Search */}
+              <Button variant="ghost" size="icon" className="glass-subtle text-white/80 hover:text-white hover:bg-white/10">
+                <Search className="h-4 w-4" />
+              </Button>
+
+              {/* Theme Toggle */}
               <Button
                 variant="ghost"
                 size="icon"
-                className="glass-subtle text-white/80 hover:text-white hover:bg-white/20"
+                onClick={() => setTheme(theme === 'dark' ? 'light' : 'dark')}
+                className="glass-subtle text-white/80 hover:text-white hover:bg-white/10"
               >
-                <Building2 className="h-5 w-5" />
+                {theme === 'dark' ? <Sun className="h-4 w-4" /> : <Moon className="h-4 w-4" />}
               </Button>
-            </PopoverTrigger>
-            <PopoverContent 
-              className="w-[600px] glass-strong border-white/30 p-0"
-              align="end"
-            >
-              <div className="p-4">
-                <h3 className="text-white font-semibold mb-4">Navigation Menu</h3>
-                <div className="grid grid-cols-2 gap-6">
-                  {menuGroups.map((group) => (
-                    <div key={group.label}>
-                      <h4 className="text-white/70 text-sm font-medium mb-3 uppercase tracking-wide">
-                        {group.label}
-                      </h4>
-                      <div className="space-y-1">
-                        {group.items.map((item) => {
-                          const Icon = item.icon;
-                          return (
-                            <Button
-                              key={item.id}
-                              variant="ghost"
-                              className={cn(
-                                "w-full justify-start gap-3 text-white/80 hover:text-white hover:bg-white/20",
-                                activeSection === item.id && "bg-blue-500/30 text-blue-300"
-                              )}
-                              onClick={() => handleSectionClick(item.id)}
-                            >
-                              <Icon className="h-4 w-4" />
-                              <span className="capitalize">{item.id.replace('-', ' ')}</span>
-                            </Button>
-                          );
-                        })}
-                      </div>
-                    </div>
-                  ))}
-                </div>
-              </div>
-            </PopoverContent>
-          </Popover>
-        </div>
 
-        {/* Search Bar */}
-        <div className="hidden md:flex flex-1 max-w-md mx-8">
-          <div className="relative w-full">
-            <Search className="absolute left-3 top-1/2 transform -translate-y-1/2 h-4 w-4 text-white/60" />
-            <Input
-              type="text"
-              placeholder="Search jobs, customers, or team members..."
-              value={searchQuery}
-              onChange={(e) => setSearchQuery(e.target.value)}
-              className="pl-10 w-full glass-subtle border-white/20 text-white placeholder:text-white/60 focus:border-blue-400/50"
-            />
+              {/* Multi-tenant mode indicator */}
+              {isMultiTenantMode() && import.meta.env.DEV && (
+                <Badge variant="outline" className="hidden md:flex glass-subtle text-white/80 border-white/20">
+                  Multi-Tenant
+                </Badge>
+              )}
+
+              {/* User Menu */}
+              <DropdownMenu>
+                <DropdownMenuTrigger asChild>
+                  <Button variant="ghost" size="icon" className="glass-subtle text-white/80 hover:text-white hover:bg-white/10">
+                    <User className="h-4 w-4" />
+                  </Button>
+                </DropdownMenuTrigger>
+                <DropdownMenuContent className="glass-strong border-white/20" align="end">
+                  <DropdownMenuItem onClick={() => handleNavClick('profile')}>
+                    <User className="h-4 w-4 mr-2" />
+                    Profile
+                  </DropdownMenuItem>
+                  <DropdownMenuItem onClick={() => handleNavClick('settings')}>
+                    <Settings className="h-4 w-4 mr-2" />
+                    Settings
+                  </DropdownMenuItem>
+                  {currentTenant && (
+                    <DropdownMenuItem>
+                      <span className="text-xs text-muted-foreground">
+                        Tenant: {currentTenant.name}
+                      </span>
+                    </DropdownMenuItem>
+                  )}
+                  <DropdownMenuItem className="text-red-400">
+                    <LogOut className="h-4 w-4 mr-2" />
+                    Sign Out
+                  </DropdownMenuItem>
+                </DropdownMenuContent>
+              </DropdownMenu>
+
+              {/* Mobile Menu */}
+              <Button
+                variant="ghost"
+                size="icon"
+                onClick={() => setIsMenuOpen(!isMenuOpen)}
+                className="lg:hidden glass-subtle text-white/80 hover:text-white hover:bg-white/10"
+              >
+                {isMenuOpen ? <X className="h-4 w-4" /> : <Menu className="h-4 w-4" />}
+              </Button>
+            </div>
           </div>
-        </div>
 
-        {/* Right Actions */}
-        <div className="flex items-center gap-2">
-          {/* Internal Meetings */}
-          <Button
-            variant="ghost"
-            size="icon"
-            onClick={() => handleSectionClick('internal-meetings')}
-            className="glass-subtle text-white/80 hover:text-white hover:bg-white/20"
-          >
-            <MessageSquare className="h-5 w-5" />
-          </Button>
-
-          {/* Notifications */}
-          <Button
-            variant="ghost"
-            size="icon"
-            onClick={() => handleSectionClick('notifications')}
-            className="glass-subtle text-white/80 hover:text-white hover:bg-white/20 relative"
-          >
-            <Bell className="h-5 w-5" />
-            <span className="absolute -top-1 -right-1 h-3 w-3 bg-red-500 rounded-full text-[10px] text-white flex items-center justify-center">
-              3
-            </span>
-          </Button>
-
-          {/* User Menu */}
-          <DropdownMenu>
-            <DropdownMenuTrigger asChild>
-              <Button variant="ghost" className="glass-subtle flex items-center gap-2 text-white/80 hover:text-white hover:bg-white/20">
-                <div className="w-8 h-8 bg-gradient-to-br from-blue-500 to-purple-600 rounded-full flex items-center justify-center">
-                  <User className="h-4 w-4 text-white" />
-                </div>
-                <span className="hidden md:block text-sm font-medium">
-                  {user?.name || user?.email?.split('@')[0] || 'User'}
-                </span>
-              </Button>
-            </DropdownMenuTrigger>
-            <DropdownMenuContent align="end" className="w-56 glass-strong border-white/30">
-              <DropdownMenuLabel className="text-white">
-                <div className="flex flex-col space-y-1">
-                  <p className="text-sm font-medium">{user?.name || 'User'}</p>
-                  <p className="text-xs text-white/70">{user?.email || 'user@example.com'}</p>
-                  <Badge variant="secondary" className="w-fit glass-subtle">
-                    {user?.role || 'Admin'}
-                  </Badge>
-                </div>
-              </DropdownMenuLabel>
-              <DropdownMenuSeparator className="bg-white/20" />
-              <DropdownMenuItem 
-                onClick={() => handleSectionClick('profile')}
-                className="text-white/80 hover:text-white hover:bg-white/20"
-              >
-                <User className="h-4 w-4 mr-2" />
-                Profile
-              </DropdownMenuItem>
-              <DropdownMenuItem 
-                onClick={() => handleSectionClick('settings')}
-                className="text-white/80 hover:text-white hover:bg-white/20"
-              >
-                <Settings className="h-4 w-4 mr-2" />
-                Settings
-              </DropdownMenuItem>
-              <DropdownMenuSeparator className="bg-white/20" />
-              <DropdownMenuItem 
-                onClick={handleLogout}
-                className="text-white/80 hover:text-white hover:bg-white/20"
-              >
-                <LogOut className="h-4 w-4 mr-2" />
-                Sign Out
-              </DropdownMenuItem>
-            </DropdownMenuContent>
-          </DropdownMenu>
+          {/* Mobile Navigation */}
+          {isMenuOpen && (
+            <div className="lg:hidden border-t border-white/20 py-4">
+              <nav className="grid grid-cols-2 gap-2">
+                {quickNavItems.map((item) => {
+                  const Icon = item.icon;
+                  const isActive = activeSection === item.id;
+                  
+                  return (
+                    <Button
+                      key={item.id}
+                      variant={isActive ? "default" : "ghost"}
+                      onClick={() => handleNavClick(item.id)}
+                      className={`glass-subtle justify-start ${
+                        isActive ? 'bg-primary text-primary-foreground' : 'text-white/80 hover:text-white hover:bg-white/10'
+                      }`}
+                    >
+                      <Icon className="h-4 w-4 mr-2" />
+                      {item.label}
+                    </Button>
+                  );
+                })}
+              </nav>
+            </div>
+          )}
         </div>
       </div>
     </header>

@@ -4,6 +4,7 @@ export interface User {
   email: string;
   name: string;
   role: 'owner' | 'admin' | 'manager' | 'employee';
+  tenantId: string; // Added tenant support
   permissions: string[];
   status: 'active' | 'pending' | 'suspended';
   lastLogin?: string;
