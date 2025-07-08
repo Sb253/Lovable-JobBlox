@@ -1,6 +1,6 @@
 
-import { GlassMorphismLayout } from "./layout/GlassMorphismLayout";
+import { MobileFirstLayout } from "./layout/MobileFirstLayout";
 
 export const AppLayout = () => {
-  return <GlassMorphismLayout />;
+  return <MobileFirstLayout />;
 };
