@@ -17,6 +17,31 @@ import { AIChatAssistant } from '../../AIChatAssistant';
 import { CompanySettings } from '../../CompanySettings';
 import { DragDropPipeline } from '../../DragDropPipeline';
 import { NotificationCenter } from '../../NotificationCenter';
+import { Pipeline } from '../../Pipeline';
+
+// Sample data for components that require props
+const sampleJobs = [
+  {
+    id: '1',
+    title: 'Kitchen Renovation',
+    customer: 'John Smith',
+    address: '123 Main St, City, State',
+    coordinates: [-74.006, 40.7128] as [number, number],
+    status: 'scheduled' as const,
+    type: 'job' as const,
+    time: '9:00 AM',
+    assignedTo: 'Mike Johnson'
+  }
+];
+
+const samplePipelineStages = [
+  {
+    id: 'leads',
+    title: 'Leads',
+    color: '#3b82f6',
+    items: []
+  }
+];
 
 export const createSectionRegistry = () => ({
   // Core sections
@@ -34,7 +59,7 @@ export const createSectionRegistry = () => ({
   // Job Operations
   jobs: <JobList />,
   'job-form': <JobList />,
-  pipeline: <DragDropPipeline />,
+  pipeline: <Pipeline />,
   schedule: <ScheduleView />,
   'time-tracking': <TimeTracking />,
   photos: <PhotoDocumentation />,
@@ -61,9 +86,9 @@ export const createSectionRegistry = () => ({
   equipment: <ReportsView />,
   vehicles: <ReportsView />,
   'advanced-inventory': <ReportsView />,
-  'employee-locations': <MapView />,
-  'radius-assignment': <MapView />,
-  'location-management': <MapView />,
+  'employee-locations': <MapView jobs={sampleJobs} />,
+  'radius-assignment': <MapView jobs={sampleJobs} />,
+  'location-management': <MapView jobs={sampleJobs} />,
   
   // AI & Automation
   'ai-chat': <AIChatAssistant />,
@@ -77,7 +102,7 @@ export const createSectionRegistry = () => ({
   // Reports & Analytics
   reports: <ReportsView />,
   analytics: <ReportsView />,
-  'map-view': <MapView />,
+  'map-view': <MapView jobs={sampleJobs} />,
   'advanced-reporting': <ReportsView />,
   
   // Communication
