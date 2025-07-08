@@ -152,7 +152,7 @@ export const TenantSubscriptionManager = ({ tenant }: TenantSubscriptionManagerP
                         <div className="flex items-center gap-2">
                           <h3 className="font-semibold">{addOn.name}</h3>
                           {isEnabled && (
-                            <Badge size="sm" className="bg-green-100 text-green-800 dark:bg-green-900/30 dark:text-green-400">
+                            <Badge className="bg-green-100 text-green-800 dark:bg-green-900/30 dark:text-green-400">
                               Active
                             </Badge>
                           )}

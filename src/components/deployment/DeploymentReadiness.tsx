@@ -185,7 +185,7 @@ export const DeploymentReadiness = () => {
                     <div className="flex-1">
                       <div className="flex items-center gap-2 mb-1">
                         <h3 className="font-semibold">{item.title}</h3>
-                        <Badge size="sm" className={getStatusColor(item.status)}>
+                        <Badge className={getStatusColor(item.status)}>
                           {item.status.charAt(0).toUpperCase() + item.status.slice(1)}
                         </Badge>
                       </div>
