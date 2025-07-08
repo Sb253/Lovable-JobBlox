@@ -8,7 +8,7 @@ import {
   DollarSign, FileText, Receipt, CreditCard, TrendingUp, Calculator,
   UserCheck, Package, Truck, Hammer, MapPin, Database,
   Brain, FileCode, PieChart, Settings, Building2, Smartphone,
-  PhoneCall, Bell
+  PhoneCall, Bell, Rocket
 } from "lucide-react";
 
 export const GlassMorphismLayout = () => {
@@ -98,11 +98,14 @@ export const GlassMorphismLayout = () => {
     { id: 'company-settings', label: 'Company Settings', icon: Building2 },
     { id: 'back-office', label: 'Back Office', icon: Settings },
     { id: 'mobile-settings', label: 'Mobile Settings', icon: Smartphone },
-    { id: 'branch-management', label: 'Branch Management', icon: Building2 }
+    { id: 'branch-management', label: 'Branch Management', icon: Building2 },
+    
+    // Deployment
+    { id: 'deployment-readiness', label: 'Deployment Readiness', icon: Rocket }
   ];
 
   return (
-    <div className="min-h-screen bg-dark-gradient">
+    <div className="min-h-screen bg-gradient-to-br from-slate-50 to-blue-50 dark:from-slate-900 dark:to-blue-900">
       <GlassMorphismHeader 
         onSectionChange={handleSectionChange}
         activeSection={activeSection}

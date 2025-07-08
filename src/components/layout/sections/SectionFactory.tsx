@@ -15,9 +15,9 @@ import { ReportsView } from '../../ReportsView';
 import { MapView } from '../../MapView';
 import { AIChatAssistant } from '../../AIChatAssistant';
 import { CompanySettings } from '../../CompanySettings';
-import { DragDropPipeline } from '../../DragDropPipeline';
-import { NotificationCenter } from '../../NotificationCenter';
 import { Pipeline } from '../../Pipeline';
+import { NotificationCenter } from '../../NotificationCenter';
+import { DeploymentReadiness } from '../../deployment/DeploymentReadiness';
 
 // Sample data for components that require props
 const sampleJobs = [
@@ -31,15 +31,6 @@ const sampleJobs = [
     type: 'job' as const,
     time: '9:00 AM',
     assignedTo: 'Mike Johnson'
-  }
-];
-
-const samplePipelineStages = [
-  {
-    id: 'leads',
-    title: 'Leads',
-    color: '#3b82f6',
-    items: []
   }
 ];
 
@@ -118,5 +109,8 @@ export const createSectionRegistry = () => ({
   
   // User sections
   profile: <CompanySettings />,
-  settings: <CompanySettings />
+  settings: <CompanySettings />,
+  
+  // Deployment
+  'deployment-readiness': <DeploymentReadiness />
 });
