@@ -18,6 +18,7 @@ import { CompanySettings } from '../../CompanySettings';
 import { Pipeline } from '../../Pipeline';
 import { NotificationCenter } from '../../NotificationCenter';
 import { DeploymentReadiness } from '../../deployment/DeploymentReadiness';
+import { MultiTenantLayout } from '../MultiTenantLayout';
 
 // Sample data for components that require props
 const sampleJobs = [
@@ -110,6 +111,11 @@ export const createSectionRegistry = () => ({
   // User sections
   profile: <CompanySettings />,
   settings: <CompanySettings />,
+  
+  // Multi-tenant sections
+  'multi-tenant': <MultiTenantLayout />,
+  'tenant-management': <MultiTenantLayout />,
+  'subscription-management': <MultiTenantLayout />,
   
   // Deployment
   'deployment-readiness': <DeploymentReadiness />

@@ -55,7 +55,7 @@ export const QuickActions = ({ onSectionChange }: QuickActionProps) => {
   ];
 
   return (
-    <Card>
+    <Card className="glass">
       <CardHeader>
         <CardTitle>Quick Actions</CardTitle>
       </CardHeader>
@@ -65,7 +65,7 @@ export const QuickActions = ({ onSectionChange }: QuickActionProps) => {
             <Button
               key={index}
               variant="outline"
-              className="h-auto p-4 flex flex-col items-start space-y-2 hover:shadow-md transition-shadow"
+              className="glass-subtle h-auto p-4 flex flex-col items-start space-y-2 hover:shadow-md transition-all duration-200 hover:scale-[1.02]"
               onClick={action.action}
             >
               <div className={`p-2 rounded-lg text-white ${action.color}`}>

@@ -25,11 +25,11 @@ export const MobileNavigation = ({ activeSection, onSectionChange, sections }: M
     { id: 'customers', label: 'Customers', icon: Users },
     { id: 'jobs', label: 'Jobs', icon: Briefcase },
     { id: 'schedule', label: 'Schedule', icon: Calendar },
-    { id: 'more', label: 'More', icon: Menu }
+    { id: 'settings', label: 'More', icon: Menu },
   ];
 
   const handleSectionClick = (sectionId: string) => {
-    if (sectionId === 'more') {
+    if (sectionId === 'settings') {
       setIsOpen(true);
     } else {
       onSectionChange(sectionId);
@@ -37,125 +37,84 @@ export const MobileNavigation = ({ activeSection, onSectionChange, sections }: M
     }
   };
 
-  const handleSheetSectionClick = (sectionId: string) => {
+  const handleMenuItemClick = (sectionId: string) => {
     onSectionChange(sectionId);
     setIsOpen(false);
   };
 
-  // Group sections for the sheet menu
-  const groupedSections = {
-    'Core': sections.filter(s => ['home', 'customers', 'jobs', 'schedule'].includes(s.id)),
-    'Operations': sections.filter(s => ['time-tracking', 'estimates', 'invoices', 'expenses'].includes(s.id)),
-    'Team': sections.filter(s => ['team-management', 'inventory', 'equipment', 'vehicles'].includes(s.id)),
-    'Reports': sections.filter(s => ['goals', 'profit-analysis', 'tax-financial'].includes(s.id)),
-    'Settings': sections.filter(s => ['notifications', 'back-office', 'admin-panel'].includes(s.id))
-  };
-
   return (
     <>
-      {/* Mobile Bottom Navigation */}
-      <div className="md:hidden fixed bottom-0 left-0 right-0 bg-white dark:bg-gray-900 border-t border-border z-50">
-        <div className="flex items-center justify-around px-2 py-2">
-          {mainNavItems.map((item) => {
-            const Icon = item.icon;
-            const isActive = activeSection === item.id || (item.id === 'more' && !mainNavItems.some(nav => nav.id === activeSection));
-            
-            return (
-              <Button
-                key={item.id}
-                variant="ghost"
-                size="sm"
-                className={cn(
-                  "flex flex-col items-center gap-1 h-auto py-2 px-3 min-w-0",
-                  isActive && "text-primary"
-                )}
-                onClick={() => handleSectionClick(item.id)}
-              >
-                <Icon className="h-5 w-5" />
-                <span className="text-xs truncate">{item.label}</span>
-              </Button>
-            );
-          })}
+      {/* Bottom Navigation Bar */}
+      <div className="fixed bottom-0 left-0 right-0 z-50 md:hidden">
+        <div className="glass-card border-t">
+          <div className="flex justify-around items-center py-2 px-4 safe-area-inset-bottom">
+            {mainNavItems.map((item) => {
+              const Icon = item.icon;
+              const isActive = activeSection === item.id;
+              
+              return (
+                <Button
+                  key={item.id}
+                  variant="ghost"
+                  size="sm"
+                  className={cn(
+                    "flex flex-col items-center gap-1 h-auto py-2 px-3 min-w-[60px]",
+                    isActive && "text-primary bg-primary/10"
+                  )}
+                  onClick={() => handleSectionClick(item.id)}
+                >
+                  <Icon className="h-5 w-5" />
+                  <span className="text-xs">{item.label}</span>
+                  {item.id === 'notifications' && (
+                    <Badge className="absolute -top-1 -right-1 h-4 w-4 p-0 text-xs bg-red-500">
+                      3
+                    </Badge>
+                  )}
+                </Button>
+              );
+            })}
+          </div>
         </div>
       </div>
 
-      {/* Mobile Menu Sheet */}
+      {/* Full Menu Sheet */}
       <Sheet open={isOpen} onOpenChange={setIsOpen}>
-        <SheetContent side="bottom" className="h-[80vh]">
-          <div className="space-y-6 py-4">
-            <div className="flex items-center justify-between">
-              <h2 className="text-lg font-semibold">Navigation</h2>
+        <SheetContent side="bottom" className="glass-strong h-[80vh]">
+          <div className="flex flex-col h-full">
+            <div className="flex items-center justify-between mb-6">
+              <h2 className="text-lg font-semibold">Navigation Menu</h2>
               <Button variant="ghost" size="sm" onClick={() => setIsOpen(false)}>
-                ✕
+                Close
               </Button>
             </div>
 
-            {/* Search */}
-            <div className="relative">
-              <Search className="absolute left-3 top-1/2 transform -translate-y-1/2 h-4 w-4 text-muted-foreground" />
-              <input
-                type="text"
-                placeholder="Search..."
-                className="w-full pl-10 pr-4 py-2 border rounded-lg bg-background"
-              />
-            </div>
-
-            {/* Grouped Navigation */}
-            <div className="space-y-6 overflow-y-auto max-h-[60vh]">
-              {Object.entries(groupedSections).map(([groupName, groupSections]) => (
-                <div key={groupName}>
-                  {groupSections.length > 0 && (
-                    <>
-                      <h3 className="text-sm font-medium text-muted-foreground uppercase tracking-wide">
-                        {groupName}
-                      </h3>
-                      <div className="grid grid-cols-2 gap-2 mt-2">
-                        {groupSections.map((section) => {
-                          const Icon = section.icon;
-                          const isActive = activeSection === section.id;
-                          
-                          return (
-                            <Button
-                              key={section.id}
-                              variant={isActive ? "default" : "ghost"}
-                              className="justify-start gap-3 h-12"
-                              onClick={() => handleSheetSectionClick(section.id)}
-                            >
-                              <Icon className="h-4 w-4" />
-                              <span className="truncate">{section.label}</span>
-                            </Button>
-                          );
-                        })}
-                      </div>
-                    </>
-                  )}
-                </div>
-              ))}
-
-              {/* Quick Actions */}
-              <div>
-                <h3 className="text-sm font-medium text-muted-foreground uppercase tracking-wide">
-                  Quick Actions
-                </h3>
-                <div className="grid grid-cols-1 gap-2 mt-2">
-                  <Button variant="outline" className="justify-start gap-3">
-                    <Bell className="h-4 w-4" />
-                    Notifications
-                    <Badge variant="secondary" className="ml-auto">3</Badge>
-                  </Button>
-                  <Button variant="outline" className="justify-start gap-3">
-                    <Settings className="h-4 w-4" />
-                    Settings
-                  </Button>
-                </div>
+            <div className="flex-1 overflow-auto">
+              <div className="grid grid-cols-2 gap-3">
+                {sections.map((section) => {
+                  const Icon = section.icon;
+                  const isActive = activeSection === section.id;
+                  
+                  return (
+                    <Button
+                      key={section.id}
+                      variant={isActive ? "default" : "outline"}
+                      className={cn(
+                        "glass-subtle h-auto p-4 flex flex-col items-center gap-2 text-center",
+                        isActive && "bg-primary text-primary-foreground"
+                      )}
+                      onClick={() => handleMenuItemClick(section.id)}
+                    >
+                      <Icon className="h-6 w-6" />
+                      <span className="text-sm">{section.label}</span>
+                    </Button>
+                  );
+                })}
               </div>
             </div>
           </div>
         </SheetContent>
       </Sheet>
-
-      {/* Spacer for bottom navigation */}
-      <div className="md:hidden h-16" />
     </>
   );
 };
+</tml>

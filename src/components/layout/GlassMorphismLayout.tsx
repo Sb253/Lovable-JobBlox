@@ -100,6 +100,11 @@ export const GlassMorphismLayout = () => {
     { id: 'mobile-settings', label: 'Mobile Settings', icon: Smartphone },
     { id: 'branch-management', label: 'Branch Management', icon: Building2 },
     
+    // Multi-tenant sections
+    { id: 'multi-tenant', label: 'Multi-Tenant', icon: Building2 },
+    { id: 'tenant-management', label: 'Tenant Management', icon: Building2 },
+    { id: 'subscription-management', label: 'Subscription Management', icon: CreditCard },
+    
     // Deployment
     { id: 'deployment-readiness', label: 'Deployment Readiness', icon: Rocket }
   ];
@@ -112,11 +117,13 @@ export const GlassMorphismLayout = () => {
       />
       
       <main className="pt-16 min-h-screen">
-        <div className="glass-card m-4 p-6 min-h-[calc(100vh-8rem)]">
-          <SectionRegistry 
-            activeSection={activeSection} 
-            onSectionChange={handleSectionChange}
-          />
+        <div className="p-4 min-h-[calc(100vh-4rem)]">
+          <div className="glass-card p-6 min-h-[calc(100vh-8rem)]">
+            <SectionRegistry 
+              activeSection={activeSection} 
+              onSectionChange={handleSectionChange}
+            />
+          </div>
         </div>
       </main>
     </div>
