@@ -1,5 +1,5 @@
 
-import React, { useState } from 'react';
+import React, { useState, useEffect } from 'react';
 import { GlassMorphismHeader } from '../GlassMorphismHeader';
 import { SectionRegistry } from './SectionRegistry';
 import { 
@@ -13,6 +13,14 @@ import {
 
 export const GlassMorphismLayout = () => {
   const [activeSection, setActiveSection] = useState('dashboard');
+
+  useEffect(() => {
+    // Ensure body has the correct classes for glass morphism
+    document.body.classList.add('glass-mode');
+    return () => {
+      document.body.classList.remove('glass-mode');
+    };
+  }, []);
 
   const handleSectionChange = (section: string) => {
     console.log('GlassMorphismLayout: Section change:', section);

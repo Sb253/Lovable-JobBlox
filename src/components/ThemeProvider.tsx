@@ -16,16 +16,16 @@ type ThemeProviderState = {
 }
 
 const initialState: ThemeProviderState = {
-  theme: "light",
+  theme: "dark", // Default to dark for glass morphism
   setTheme: () => null,
-  actualTheme: "light",
+  actualTheme: "dark",
 }
 
 const ThemeProviderContext = createContext<ThemeProviderState>(initialState)
 
 export function ThemeProvider({
   children,
-  defaultTheme = "light",
+  defaultTheme = "dark", // Default to dark for glass morphism
   storageKey = "lovable-ui-theme",
   ...props
 }: ThemeProviderProps) {
@@ -38,26 +38,14 @@ export function ThemeProvider({
     const body = window.document.body
 
     root.classList.remove("light", "dark")
-    body.classList.remove("light", "dark")
+    body.classList.remove("light", "dark", "glass-mode")
 
     root.classList.add(theme)
     body.classList.add(theme)
+    
+    // Always add glass-mode class for the glass morphism layout
+    body.classList.add("glass-mode")
 
-    if (theme === "dark") {
-      root.style.backgroundColor = '#0f172a'
-      root.style.color = '#f8fafc'
-      body.style.backgroundColor = '#0f172a'
-      body.style.color = '#f8fafc'
-      body.style.background = 'linear-gradient(135deg, #0f172a 0%, #1e293b 100%)'
-      body.style.minHeight = '100vh'
-    } else {
-      root.style.backgroundColor = '#ffffff'
-      root.style.color = '#0f172a'
-      body.style.backgroundColor = '#ffffff'
-      body.style.color = '#0f172a'
-      body.style.background = 'linear-gradient(135deg, #f8fafc 0%, #e2e8f0 100%)'
-      body.style.minHeight = '100vh'
-    }
   }, [theme])
 
   const value = {
