@@ -1,24 +1,22 @@
 
-import React, { lazy } from 'react';
-
-// Lazy load components
-const Dashboard = lazy(() => import('../../Dashboard'));
-const QuickActions = lazy(() => import('../../QuickActions'));
-const CustomerList = lazy(() => import('../../CustomerList'));
-const JobList = lazy(() => import('../../JobList'));
-const ScheduleView = lazy(() => import('../../ScheduleView'));
-const TimeTracking = lazy(() => import('../../TimeTracking'));
-const PhotoDocumentation = lazy(() => import('../../PhotoDocumentation'));
-const EstimateList = lazy(() => import('../../EstimateList'));
-const InvoiceList = lazy(() => import('../../InvoiceList'));
-const ExpenseList = lazy(() => import('../../ExpenseList'));
-const TeamManagement = lazy(() => import('../../TeamManagement'));
-const ReportsView = lazy(() => import('../../ReportsView'));
-const MapView = lazy(() => import('../../MapView'));
-const AIChatAssistant = lazy(() => import('../../AIChatAssistant'));
-const CompanySettings = lazy(() => import('../../CompanySettings'));
-const DragDropPipeline = lazy(() => import('../../DragDropPipeline'));
-const NotificationCenter = lazy(() => import('../../NotificationCenter'));
+import React from 'react';
+import { Dashboard } from '../../Dashboard';
+import { QuickActions } from '../../QuickActions';
+import { CustomerList } from '../../CustomerList';
+import { JobList } from '../../JobList';
+import { ScheduleView } from '../../ScheduleView';
+import { TimeTracking } from '../../TimeTracking';
+import { PhotoDocumentation } from '../../PhotoDocumentation';
+import { EstimateList } from '../../EstimateList';
+import { InvoiceList } from '../../InvoiceList';
+import { ExpenseList } from '../../ExpenseList';
+import { TeamManagement } from '../../TeamManagement';
+import { ReportsView } from '../../ReportsView';
+import { MapView } from '../../MapView';
+import { AIChatAssistant } from '../../AIChatAssistant';
+import { CompanySettings } from '../../CompanySettings';
+import { DragDropPipeline } from '../../DragDropPipeline';
+import { NotificationCenter } from '../../NotificationCenter';
 
 export const createSectionRegistry = () => ({
   // Core sections
