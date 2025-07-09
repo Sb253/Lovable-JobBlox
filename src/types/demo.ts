@@ -17,6 +17,7 @@ export const defaultDemoConfig: DemoConfig = {
     email: 'owner@jobblox.com',
     name: 'System Owner',
     role: 'owner',
+    tenantId: 'acme-corp', // Added missing tenantId property
     permissions: [
       'view_dashboard',
       'manage_customers', 
