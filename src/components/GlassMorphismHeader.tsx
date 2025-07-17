@@ -37,9 +37,9 @@ export const GlassMorphismHeader: React.FC<GlassMorphismHeaderProps> = ({
 
   // All available sections for the mega menu
   const sections = [
-    // Core sections
-    { id: 'home', label: 'Home', icon: Home },
-    { id: 'dashboard', label: 'Dashboard', icon: BarChart3 },
+    // Dashboard & Overview
+    { id: 'dashboard', label: 'Home', icon: Home },
+    { id: 'goals', label: 'KPIs', icon: BarChart3 },
     { id: 'quick-actions', label: 'Quick Actions', icon: BarChart3 },
     
     // Customer Management
@@ -63,7 +63,6 @@ export const GlassMorphismHeader: React.FC<GlassMorphismHeaderProps> = ({
     { id: 'estimates', label: 'Estimates', icon: FileText },
     { id: 'invoices', label: 'Invoices', icon: FileText },
     { id: 'expenses', label: 'Expenses', icon: FileText },
-    { id: 'goals', label: 'Goals', icon: BarChart3 },
     { id: 'tax-financial', label: 'Tax & Financial', icon: FileText },
     { id: 'financial-analytics', label: 'Financial Analytics', icon: BarChart3 },
     { id: 'payment-integration', label: 'Payment Integration', icon: FileText },
@@ -84,6 +83,23 @@ export const GlassMorphismHeader: React.FC<GlassMorphismHeaderProps> = ({
     { id: 'radius-assignment', label: 'Radius Assignment', icon: Users },
     { id: 'location-management', label: 'Location Management', icon: Users },
     
+    // AI & Automation
+    { id: 'ai-chat', label: 'AI Chat', icon: Settings },
+    { id: 'smart-document-generator', label: 'Document Generation', icon: Settings },
+    { id: 'predictive-analytics', label: 'Predictive Analytics', icon: BarChart3 },
+    { id: 'ai-settings', label: 'AI Settings', icon: Settings },
+    
+    // Reports & Analytics
+    { id: 'reports', label: 'Reports', icon: BarChart3 },
+    { id: 'analytics', label: 'Analytics', icon: BarChart3 },
+    { id: 'map-view', label: 'Map View', icon: BarChart3 },
+    { id: 'advanced-reporting', label: 'Advanced Reporting', icon: BarChart3 },
+    
+    // Communication
+    { id: 'team-chat', label: 'Team Chat', icon: Users },
+    { id: 'notifications', label: 'Notifications', icon: Users },
+    { id: 'internal-meetings', label: 'Internal Meetings', icon: Users },
+    
     // Settings & Administration
     { id: 'company-settings', label: 'Company Settings', icon: Settings },
     { id: 'back-office', label: 'Back Office', icon: Settings },
@@ -92,6 +108,7 @@ export const GlassMorphismHeader: React.FC<GlassMorphismHeaderProps> = ({
   ];
 
   const handleNavClick = (sectionId: string) => {
+    console.log('GlassMorphismHeader: Nav click:', sectionId);
     onSectionChange(sectionId);
     setIsMenuOpen(false);
   };
@@ -107,7 +124,7 @@ export const GlassMorphismHeader: React.FC<GlassMorphismHeaderProps> = ({
               
               {/* Header Mega Menu - Desktop */}
               <HeaderMegaMenu 
-                onSectionChange={onSectionChange}
+                onSectionChange={handleNavClick}
                 activeSection={activeSection}
                 sections={sections}
               />
