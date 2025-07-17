@@ -1,11 +1,10 @@
-
 import React from 'react';
 import { Button } from "@/components/ui/button";
 import { ScrollArea } from "@/components/ui/scroll-area";
 import { Collapsible, CollapsibleContent, CollapsibleTrigger } from "@/components/ui/collapsible";
 import { ChevronDown, ChevronRight } from "lucide-react";
 import { cn } from "@/lib/utils";
-import { SidebarGroup } from "./MegaMenuConfig";
+import { SidebarGroup } from "../header/MegaMenuConfig";
 
 interface MegaMenuNavigationProps {
   menuGroups: SidebarGroup[];

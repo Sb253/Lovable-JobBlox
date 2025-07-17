@@ -1,4 +1,3 @@
-
 import { useState, useEffect } from "react";
 import { Button } from "@/components/ui/button";
 import { Building2 } from "lucide-react";
@@ -6,7 +5,7 @@ import { cn } from "@/lib/utils";
 import { CollapsedSidebar } from "./CollapsedSidebar";
 import { MegaMenuHeader } from "./sidebar/MegaMenuHeader";
 import { MegaMenuNavigation } from "./sidebar/MegaMenuNavigation";
-import { createMenuGroups, SidebarSection } from "./sidebar/MegaMenuConfig";
+import { createMenuGroups, SidebarSection } from "./header/MegaMenuConfig";
 
 interface MegaMenuSidebarProps {
   activeSection: string;
